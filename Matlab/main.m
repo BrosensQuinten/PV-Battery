@@ -10,3 +10,4 @@ WordString = 'Azimuth';
 B=strfind(spots, WordString);
 result = spots(B:end);
 
+%% loading data of sun positions
