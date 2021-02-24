@@ -1,0 +1,19 @@
+
+    startdate1 = datetime(2018,03,13,15,39,00);
+    enddate1 = datetime(2018,03,26,08,03,00);
+    missingperiod1 = startdate1:minutes(1):enddate1;
+    missingperiod1 = transpose(missingperiod1);
+    index1 = find(irradiance_data.DateTime == datetime(2018,03,13,15,38,00));
+    
+    %%
+    globrad = irradiance_data.GlobRad;
+    diffrad = irradiance_data.DiffRad;
+    
+    for i = 1:length(missingperiod1)
+        nextmonth = missingperiod1(i,1) + calmonths(1);
+        prevmonth = missingperiod1(i,1) - calmonths(1);
+        nextindex = find(irradiance_data.DateTime == nextmonth);
+        previndex = find(irradiance_data.DateTime == prevmonth);
+        missingperiod(i,2) = (globrad(nextindex) + globrad(previndex))/2;
+        missingperiod(i,3) = (diffrad(nextindex) + diffrad(previndex))/2;
+    end

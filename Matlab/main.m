@@ -1,13 +1,8 @@
-api = 'https://suncalc.org/#/48.85826,2.29451,17/2015.05.11/13:15/324.0/2';
-url = [api];
-  
-options = weboptions()
-spots = webread(url);
-whos('spots')
+%% Adds the missing rows in the irradiance data file
+path = [pwd , '\Data\Irradiance_data.mat'];
+irradiance_data = load(path);
+irradiance_data = irradiance_data.Irradiancedata;
+irradiance_data_filled = irradiance_fill(irradiance_data);
+
 
 %%
-WordString = 'Azimuth';
-B=strfind(spots, WordString);
-result = spots(B:end);
-
-%% loading data of sun positions
