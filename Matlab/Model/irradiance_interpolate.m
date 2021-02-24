@@ -34,8 +34,8 @@
         prevmonth = missingperiod2(i,1) - calmonths(1);
         nextindex = find(irradiance_data.DateTime == nextmonth);
         previndex = find(irradiance_data.DateTime == prevmonth);
-        missingperiod(i,1) = (globrad(nextindex) + globrad(previndex))/2;
-        missingperiod(i,2) = (diffrad(nextindex) + diffrad(previndex))/2;
+        radinterpolate(i,1) = (globrad(nextindex) + globrad(previndex))/2;
+        radinterpolate(i,2) = (diffrad(nextindex) + diffrad(previndex))/2;
     end
     %%
-    period2 = table(missingperiod2,missingperiod(:,1),missingperiod(:,2));
+    period2 = table(missingperiod2,radinterpolate(:,1),radinterpolate(:,2));
