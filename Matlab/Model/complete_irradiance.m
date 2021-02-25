@@ -32,3 +32,22 @@ disp('second shift done');
 writetable(missing2,filename2,'Range','A243184:C260448','WriteVariableNames',0); 
 disp('second period done');
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gaatjesvul code, run eerst bovenste deel als je nieuwe excel genereert
+% ik voeg de data handmatig toe in excel door de formule = 'prev cell +
+% 1/1440' te gebruiken.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% filename = 'Irradiance_data_final.xlsx';
+% 
+% % %first shift (31 ma 02:14 - 1 apr 16:54) - add the values of the same
+% % %period a day before
+% % read1 = readcell(filename,'Range','A128236:C523280');
+% % writecell(read1,filename,'Range','A130557:C525601'); % shift of 1307+1015
+% 
+% %generate data 
+% read2 = readcell(filename,'Range','B125356:C127676');
+% writecell(read2,filename,'Range','B128236:C130557');
+
+
+
