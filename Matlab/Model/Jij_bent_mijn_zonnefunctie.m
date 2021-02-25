@@ -54,7 +54,7 @@ solar_position = readtable(filename1);
 Azimuth = solar_position{:,2};
 Elevation = solar_position{:,3};
 
-filename2 = 'Irradiance_data.xlsx';
+filename2 = 'Irradiance_data_final.xlsx';
 irr_data = readtable(filename2);
 date_time = irr_data{:,1};
 glob_rad = irr_data{:,2};
@@ -63,7 +63,7 @@ diff_rad = irr_data{:,3};
 
 len = size(date_time,1);
 intensity = zeros(len,1);
-for i=1:10000
+for i=1:len
     gl = glob_rad(i,1);
     ang = Elevation(i,1);
     intensity(i,1) = gl/sin(pi*ang/180);

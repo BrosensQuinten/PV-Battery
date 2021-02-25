@@ -10,6 +10,8 @@ disp(' ')
 sun_list = cell(1,365);
 sun_tab = cell(35040,3);
 flag = 1;
+passma = 0;
+passoct = 0;
 
 % Input the Location of the Observer
 locstr = input('- Enter the Location of the Observer: ','s');
@@ -120,7 +122,18 @@ dur_interval_sdn = dur_interval / (24 * 60);
 % if  isempty(time_span) == 1
 %     time_span = 24;
 % end
-time_span = 24;
+
+if (time.month == 3) && (time.day == 25) 
+       
+        time_span = 23;
+        
+  elseif (time.month == 10) && (time.day == 28) 
+
+        time_span = 25;
+else
+    time_span = 24;
+end
+
 num_interval = (time_span * 60 / dur_interval);
 
 sunaz_timesdn(1) = data_time_sdn;                   % The Serial Date Number of the Time Values are stored for printing purposes.
@@ -151,10 +164,16 @@ for i = 1 : num_interval,
   
 DateVector = [time.year,time.month,time.day,time.hour,time.min,time.sec];
 test = datestr(DateVector);
-sun_tab{i+(j-1)*1440,1} = test;
 
 
 
+if (passma == 1) && (passoct == 0)
+    sun_tab{i+(j-2)*1440+1380,1} = test;
+elseif passoct == 1
+    sun_tab{i+(j-3)*1440+1380+1500,1} = test;
+else
+    sun_tab{i+(j-1)*1440,1} = test;
+end 
     
     sunaztime(i,1) = time.month;
     sunaztime(i,2) = time.day;
@@ -186,18 +205,36 @@ sun_azdata = horzcat(sunaztime,sun_az_format1,sun_az_format2,sun_el_format1);
 sec_temp = round(sun_azdata(7,:));					% The seconds in the Sun Azimuth are rounded off.
 sun_azdata(7,:) = sec_temp;
 
-start = 1 +(j-1)*1440;
 
-for k=1:1440
+if (passma == 1) && (passoct == 0)
+    start = 1 +(j-2)*1440+1380;
+elseif passoct == 1
+    start = 1 +(j-3)*1440+1380+1500;
+else
+    start = 1 +(j-1)*1440;
+end 
+
+
+limit = time_span*60;
+for k=1:limit
 sun_tab{start+k-1,2} = sun_azdata(k,6);
 sun_tab{start+k-1,3} = sun_azdata(k,10);
 end
+
 sun_list{1,j} = sun_azdata; %for ascii file
+
+if (time.month == 3) && (time.day == 25) 
+    
+        passma = 1;
+        
+  elseif (time.month == 10) && (time.day == 28) 
+
+        passoct = 1;
+end
 
 datentime(2) = date_mat(2);
 date_mat(3) = date_mat(3)+1;
 datentime(3) = date_mat(3);
-
 % disp(datentime(3));
 
 end
@@ -206,7 +243,7 @@ time.min = time.min - dur_interval;
 
 %write an excel file
 head = ["DateTime","Azimuth","Elevation"];
-filename = 'Solar_Position3.xlsx';
+filename = 'Solar_Pos_Final.xlsx';
 
 writematrix(head,filename,'Sheet',1,'Range','A1:C3')
 writecell(sun_tab,filename,'Sheet',1,'Range','A2:C525601')
