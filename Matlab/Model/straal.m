@@ -4,7 +4,7 @@ solar_position = readtable(filename1);
 Azimuth = solar_position{:,2};
 Elevation = solar_position{:,3};
 
-filename2 = 'Irradiance_data.xlsx';
+filename2 = 'Irradiance_data_final.xlsx';
 irr_data = readtable(filename2);
 date_time = irr_data{:,1};
 glob_rad = irr_data{:,2};
