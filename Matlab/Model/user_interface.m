@@ -14,6 +14,7 @@ end
 angle = input('Under which angle are the PV panels installed? answer in degrees: ');
 surface_area = input('how much surface area? [m^2]: ');
 %possible addition: which tariff is used?
+%possible addition: what is the efficiency of the solar panel?
 disp('Thank you. Performing calculations...');
 
 ray = straal();
@@ -27,10 +28,13 @@ end
 
 
 %Conversion to actual generated power (depends on efficiency solar panels);
-
+%Pgen(:,1) = 10^(-3)*eta * irr(:,1); (conversion to kW)
 %Compare Pgen with Pload -> net power consumption/generation?
 
 
+
+
+disp('Calculations done.');
 
 
 
