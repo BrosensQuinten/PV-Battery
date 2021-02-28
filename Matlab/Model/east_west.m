@@ -1,7 +1,10 @@
-function [irr,W] = east_west(hoek,A)
-[ray,date_time,intensity,azimuth,elevation,glob_rad,diffusion,len]=straal();
- irr = zeros(len,1);
- W=0;
+function irr= east_west(hoek,A,ray)
+intensity = ray(:,2);
+azimuth = ray(:,3);
+elevation = ray(:,4);
+diffusion = ray(:,6);
+len = size(intensity,1);
+irr = zeros(len,1);
  for n=1:len
         alpha = elevation(n,1)*pi/180;
         beta = azimuth(n,1)*pi/180;
@@ -13,14 +16,12 @@ function [irr,W] = east_west(hoek,A)
             inc_yz = -inc*sin(beta);
         end
            incy = inc_yz*cos(alpha);
-        incz = inc_yz*cos(alpha); %waarom niet inc*sin(alpha)?
-        inc_pan = A*(incy*sin(theta) + incz*cos(theta)); %zcomponenet for whole A, tangential for A/2?
+        incz = inc*sin(alpha);
+        inc_pan = A*(incy*sin(theta) +incz*cos(theta));
         if inc_pan < 0
             inc_pan = 0;
         end
         irr(n,1) = inc_pan+A*diffusion(n,1);
-        W = W + irr(n,1);
-    
  end
  end
 
