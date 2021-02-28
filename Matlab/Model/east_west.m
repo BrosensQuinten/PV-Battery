@@ -13,8 +13,8 @@ function [irr,W] = east_west(hoek,A)
             inc_yz = -inc*sin(beta);
         end
            incy = inc_yz*cos(alpha);
-        incz = inc_yz*cos(alpha);
-        inc_pan = A*(incy*sin(theta) + incz*cos(theta));
+        incz = inc_yz*cos(alpha); %waarom niet inc*sin(alpha)?
+        inc_pan = A*(incy*sin(theta) + incz*cos(theta)); %zcomponenet for whole A, tangential for A/2?
         if inc_pan < 0
             inc_pan = 0;
         end
