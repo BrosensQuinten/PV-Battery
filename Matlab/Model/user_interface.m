@@ -16,14 +16,15 @@ surface_area = input('how much surface area? [m^2]: ');
 %possible addition: which tariff is used?
 disp('Thank you. Performing calculations...');
 
-[ray,date_time,intensity,azimuth,elevation,glob_rad,diffusion,len]=straal();
+ray = straal();
 
 %calculate received power per minute
 if orientation == 1
-    [irr,W] = south_face(angle,surface_area);
+    irr = south_face(angle,surface_area,ray);
 else
-    [irr,W] = east_west(angle,surface_area);
+    irr = east_west(angle,surface_area,ray);
 end
+
 
 %Conversion to actual generated power (depends on efficiency solar panels);
 

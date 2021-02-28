@@ -17,7 +17,7 @@ irr = zeros(len,1);
         end
            incy = inc_yz*cos(alpha);
         incz = inc*sin(alpha);
-        inc_pan = A*(incy*sin(theta) +incz*cos(theta));
+        inc_pan = A*(incy*sin(theta)/2 +incz*cos(theta));
         if inc_pan < 0
             inc_pan = 0;
         end
