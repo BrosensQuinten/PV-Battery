@@ -1,4 +1,4 @@
-function irr = east_west(hoek,A,ray)
+function [irr,W] = east_west(hoek,A,ray)
 intensity = ray(:,2);
 azimuth = ray(:,3);
 elevation = ray(:,4);
@@ -16,13 +16,15 @@ irr = zeros(len,1);
         else 
             inc_yz = -inc*sin(beta);
         end
-        incy = inc_yz*cos(alpha);
+           incy = inc_yz*cos(alpha);
         incz = inc*sin(alpha);
-        inc_pan = A*(incy*sin(theta)/2 +incz*cos(theta));
+        inc_pan = A*(incy*sin(theta) +incz*cos(theta));
         if inc_pan < 0
             inc_pan = 0;
         end
         irr(n,1) = inc_pan+A*diffusion(n,1);
+        W = W + irr(n,1);
+    
  end
  end
 

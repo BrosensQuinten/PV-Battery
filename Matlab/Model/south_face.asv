@@ -1,4 +1,4 @@
-function irr = south_face(hoek,A,ray)
+function [irr,W] = south_face(hoek,A,ray)
     intensity = ray{:,2};
     azimuth = ray{:,3};
     elevation = ray{:,4};
@@ -14,13 +14,14 @@ function irr = south_face(hoek,A,ray)
         theta = hoek*pi/180;
         
         
-        incx = -inc*cos(alpha)*cos(beta);
-        incz = inc*sin(alpha);
-        inc_pan = A*(incx*sin(theta) + incz*cos(theta));
+        incx = inc_yz*cos(alpha);
+        incz = inc_yz*sin(alpha);
+        inc_pan = A*(incy*sin(theta) + incz*cos(theta));
         if inc_pan < 0
             inc_pan = 0;
         end
         irr(n,1) = inc_pan+A*diffusion(n,1);
+        W = W + irr(n,1);
     end
 end
 
