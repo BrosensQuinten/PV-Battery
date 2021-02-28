@@ -1,10 +1,5 @@
-function irr = south_face(hoek,A,ray)
-    intensity = ray{:,2};
-    azimuth = ray{:,3};
-    elevation = ray{:,4};
-    diffusion = ray{:,6};
-
-    len = size(intensity,1);
+function [irr,W] = south_face(hoek,A)
+[ray,date_time,intensity,azimuth,elevation,glob_rad,diffusion,len]=straal();
     irr = zeros(len,1);
     W = 0;
     for n=1:len
@@ -13,14 +8,15 @@ function irr = south_face(hoek,A,ray)
         inc = intensity(n,1);
         theta = hoek*pi/180;
         
-        
-        incx = -inc*cos(alpha)*cos(beta);
-        incz = inc*sin(alpha);
-        inc_pan = A*(incx*sin(theta) + incz*cos(theta));
+        inc_yz = -inc*cos(beta);
+        incy = inc_yz*cos(alpha);
+        incz = inc_yz*sin(alpha); %inc_yz -> inc zijn?
+        inc_pan = A*(incy*sin(theta) + incz*cos(theta));
         if inc_pan < 0
             inc_pan = 0;
         end
         irr(n,1) = inc_pan+A*diffusion(n,1);
+        W = W + irr(n,1); %vermogens optellen heeft geen betekenis? 
     end
 end
 
