@@ -1,4 +1,4 @@
- %%this script interpolates the missing data for the irradiance profile and the load profile. 
+ %% this script interpolates the missing data for the irradiance profile and the load profile. 
 
 
     startdate1 = datetime(2018,03,13,15,39,00);
