@@ -1,4 +1,4 @@
-classdef solar_module
+classdef solar_module < dynamicprops
     %this class is to store the data of the relevant solar panels.
     %   Detailed explanation goes here
     
@@ -8,14 +8,14 @@ classdef solar_module
         efficiency = 0
         max_power = 0 %
         area = 0 %m2
-        power_gradient = 0 % %/degree celsius
+        power_temperature_coef = 0 % %/degree celsius
         price = 0; %in euros
         
         
     end
     
     methods
-        function obj = solar_module(module_name, module_type , efficiency, max_power, area, power_gradient,price)
+        function obj = solar_module(module_name, module_type , efficiency, max_power, area, power_temperature_coef,price)
             %UNTITLED2 Construct an instance of this class
             %   Detailed explanation goes here
            if nargin == 1
@@ -23,7 +23,7 @@ classdef solar_module
                 efficiency = 0
                 max_power = 0 %
                 area = 0 %m2
-                power_gradient = 0 % %/degree celsius
+                power_temperature_coef = 0 % %/degree celsius
                 price = 0; %in euros
            end
             obj.module_name = module_name;
@@ -31,7 +31,7 @@ classdef solar_module
             obj.efficiency = efficiency;
             obj.max_power = max_power;
             obj.area = area;
-            obj.power_gradient = power_gradient;
+            obj.power_temperature_coef = power_temperature_coef;
             obj.price = price;
         end
         
