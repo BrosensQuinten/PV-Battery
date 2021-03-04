@@ -1,7 +1,10 @@
 %                        User interface                      %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% ray = straal(); % kan je 1 keer runnen en dan scenario's vergelijken.
+%ray = straal(); % kan je 1 keer runnen en dan scenario's vergelijken.
+filename = 'Load_profile_final.xlsx';
+load_15m = readtable(filename);
+load = load_15m{:,2};
 
 roof = input('Flat (1) or gable roof (2)?: '); 
 if  isempty(roof) == 1
@@ -52,7 +55,7 @@ end
 disp('Thank you. Performing calculations...');
 
 
-
+[pf,injectie,consumptie]=Power_Flow(LG_Neon_5,irr, load,surface_area);
 
 
 %Conversion to actual generated power (depends on efficiency solar panels);
