@@ -14,7 +14,11 @@ diff_rad = irr_data{:,3};
 len = size(date_time,1);
 intensity = zeros(len,1);
 for i=1:len
+    if Elevation(i,1) > 1
     intensity(i,1) = glob_rad(i,1)/sin(pi*Elevation(i,1)/180);
+    else
+        intensity(i,1) = 0;
+    end
 end
 azimuth = Azimuth(1:len,1);
 elevation = Elevation(1:len,1);
