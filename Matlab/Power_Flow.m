@@ -1,6 +1,6 @@
-function [pf,injectie,consumptie] = Power_Flow(Solar_panel,irr,load,A)
+function [pf,injectie,consumptie] = Power_Flow(Solar_panel,irr,load)
 eff = Solar_panel.efficiency;
-gen = eff*irr*A/1000; % gedeeld door 1000 om in kW te zetten
+gen = eff*irr/1000; % gedeeld door 1000 om in kW te zetten
 length = size(gen,1);
 pf = zeros(length,1);
 injectie = 0;

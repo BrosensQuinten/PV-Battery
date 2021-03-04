@@ -55,7 +55,7 @@ end
 disp('Thank you. Performing calculations...');
 
 
-[pf,injectie,consumptie]=Power_Flow(LG_Neon_5,irr, load,surface_area);
+[pf,injectie,consumptie]=Power_Flow(LG_Neon_5,irr, load);
 
 
 %Conversion to actual generated power (depends on efficiency solar panels);
