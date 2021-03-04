@@ -1,8 +1,8 @@
 function irr= east_west(hoek,A,ray)
-intensity = ray(:,2);
-azimuth = ray(:,3);
-elevation = ray(:,4);
-diffusion = ray(:,6);
+intensity = ray{:,2};
+azimuth = ray{:,3};
+elevation = ray{:,4};
+diffusion = ray{:,6};
 len = size(intensity,1);
 irr = zeros(len,1);
  for n=1:len
