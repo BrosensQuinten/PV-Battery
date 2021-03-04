@@ -28,6 +28,12 @@ elseif (tariff ~= 1) && (tariff ~= 2)
     disp('That input is unvalid! Answer with "1" or "2" ');
 end
 
+bat = input('Is a battery included? YES (1) or NO (2)?: ');
+if  isempty(bat) == 1
+    return;
+elseif (bat ~= 1) && (bat ~= 2)
+    disp('That input is unvalid! Answer with "1" or "2" ');
+end
 
 
 if roof == 1 && orientation == 1
