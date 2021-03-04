@@ -10,12 +10,12 @@ classdef solar_module < dynamicprops
         area = 0 %m2
         power_temperature_coef = 0 % %/degree celsius
         price = 0; %in euros
-        
+        lifetime = 0;
         
     end
     
     methods
-        function obj = solar_module(module_name, module_type , efficiency, max_power, area, power_temperature_coef,price)
+        function obj = solar_module(module_name, module_type , efficiency, max_power, area, power_temperature_coef,price, lifetime)
             %UNTITLED2 Construct an instance of this class
             %   Detailed explanation goes here
            if nargin == 1
@@ -24,7 +24,8 @@ classdef solar_module < dynamicprops
                 max_power = 0 %
                 area = 0 %m2
                 power_temperature_coef = 0 % %/degree celsius
-                price = 0; %in euros
+                price = 0 %in euros
+                lifetime = 0;
            end
             obj.module_name = module_name;
             obj.module_type = module_type;
@@ -33,6 +34,7 @@ classdef solar_module < dynamicprops
             obj.area = area;
             obj.power_temperature_coef = power_temperature_coef;
             obj.price = price;
+            obj.lifetime = lifetime;
         end
         
         
