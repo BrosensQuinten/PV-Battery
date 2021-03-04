@@ -13,7 +13,7 @@ elseif (roof ~= 1) && (roof ~= 2)
     disp('That input is unvalid! Answer with "1" or "2" ');
 end
 
-roof_area = 60; % updaten met merijn
+roof_area = 1; % updaten met merijn
 roof_angle = 30; %only used for gable roof update
 surface_area = roof_area; %oppervlakte aan zonnepanelen, kan later nog variabel worden miss?
 
@@ -55,7 +55,7 @@ end
 disp('Thank you. Performing calculations...');
 
 
-[pf,injectie,consumptie]=Power_Flow(LG_Neon_5,irr, load);
+% [pf,injectie,consumptie]=Power_Flow(LG_Neon_5,irr, load);
 
 
 %Conversion to actual generated power (depends on efficiency solar panels);

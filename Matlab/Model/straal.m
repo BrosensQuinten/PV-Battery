@@ -15,10 +15,12 @@ len = size(date_time,1);
 intensity = zeros(len,1);
 for i=1:len
     gl = glob_rad(i,1)-diff_rad(i,1);
-    if gl<0
+    
+    if gl<5
         gl = 0;
     end
-    if Elevation(i,1) > 0
+    
+    if Elevation(i,1) > 5
     intensity(i,1) = gl/sin(pi*Elevation(i,1)/180);
     else
         intensity(i,1) = 0;
