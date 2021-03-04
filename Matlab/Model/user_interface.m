@@ -31,7 +31,7 @@ end
 
 
 if roof == 1 && orientation == 1
-    disp('The most optimal angle is 43 degrees. (Angle_Optimization');
+    disp('The most optimal angle is 43 degrees. Angle_Optimization.m');
     angle = 43;
     irr = south_face(angle,surface_area,ray);
 elseif roof == 1 && orientation == 2
