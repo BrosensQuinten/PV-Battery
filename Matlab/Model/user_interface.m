@@ -1,7 +1,7 @@
 %                        User interface                      %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-ray = straal(); % kan je 1 keer runnen en dan scenario's vergelijken.
+%ray = straal(); % kan je 1 keer runnen en dan scenario's vergelijken.
 filename = 'Load_profile_final.xlsx';
 load_15m = readtable(filename);
 load = load_15m{:,2};

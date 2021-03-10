@@ -4,3 +4,9 @@ load_15m = readtable(filename);
 %[tot_year,avg_year] = load_year(load_15m);
 %[pf,injectie,consumptie]=Power_Flow(sunpower_maxeon_3,irr, load_15m,20);
 straal()
+
+
+%%
+temp = transpose(mean(reshape(irr, [15, 525600/15]),1));
+
+power_diff_15m = temp - load_15m.Load_kW; %positive = power into grid, negative = power drawn from grid
