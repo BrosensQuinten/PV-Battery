@@ -7,6 +7,8 @@ load_15m = readtable(filename);
 
 
 %%
-temp = transpose(mean(reshape(irr, [15, 525600/15]),1));
+irr_15m = transpose(mean(reshape(irr, [15, 525600/15]),1));%takes the 15m average of the irradiance data
 
-power_diff_15m = temp - load_15m.Load_kW; %positive = power into grid, negative = power drawn from grid
+eff = 0.17;
+
+power_diff_15m = eff*irr_15m/1000 - load_15m.Load_kW; %positive = power into grid, negative = power drawn from grid
