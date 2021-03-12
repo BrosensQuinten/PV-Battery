@@ -1,7 +1,7 @@
 %                        User interface                      %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%ray = straal(); % kan je 1 keer runnen en dan scenario's vergelijken.
+ray = straal(); % kan je 1 keer runnen en dan scenario's vergelijken.
 filename = 'Load_profile_final.xlsx';
 load_15m = readtable(filename);
 load = load_15m{:,2};
@@ -56,7 +56,7 @@ disp('Thank you. Performing calculations...');
 
 
 % [pf,injectie,consumptie]=Power_Flow(LG_Neon_5,irr, load);
-
+% [Efficiency,Tz] = Efficiency(LG_Neon_5,irr_monthly)
 
 %Conversion to actual generated power (depends on efficiency solar panels);
 %Pgen(:,1) = 10^(-3)*eta * irr(:,1); (conversion to kW)
