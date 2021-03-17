@@ -1,11 +1,9 @@
-function [Efficiency,Tz] = Efficiency(zonnepaneel,irr)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
-filename = 'Load_profile_final.xlsx';
-load_15m = readtable(filename);
+function [Efficiency,Tz] = Efficiency(zonnepaneel,irr_monthly)
+%this function calculated the adapted efficiency based on the monthly
+%temperatures and irradiances and estimates the PV temperature using a natural
+%convection iteration.
 
-eff_nom = zonnepaneel.efficiency; %dit moest omgevormd worden naar een kommagetal onder 1!
-eff_nom = eff_nom/100;
+eff_nom = zonnepaneel.efficiency/100; %dit moest omgevormd worden naar een kommagetal onder 1!
 A = 1;
 L = 1;
 k = 0.026;
@@ -15,16 +13,7 @@ g = 9.81;
 Ta =[6,0.8,5.4,13,16.3,18.1,22,19.4,15.4,12.6,7.4,5.8]+273.15;
 Tz= [10,30,10,18,18,19,23,22,18,15,10,8]+273.15;
 Efficiency= [0,0,0,0,0,0,0,0,0,0,0,0];
-temp_coef = zonnepaneel.power_temperature_coef; %moest ook omgevormd worden naar kommagetal onder 1.
-temp_coef = temp_coef/100;
-
-month_indices = [1 44641 84961 129541 172741 217381 260581 305221 349861 393061 437761 480961 525601];
-irr_monthly = zeros(1,1);
-
-for i = 1:size(month_indices,2)-1
-    irr_monthly = vertcat(irr_monthly, mean(nonzeros(irr(month_indices(i): month_indices(i+1)-1))));
-end
-irr_monthly(1,:) = [];
+temp_coef = zonnepaneel.power_temperature_coef/100; %moest ook omgevormd worden naar kommagetal onder 1.
 
 for i = 1:12
 %     Tz(i) = 25+273.15;

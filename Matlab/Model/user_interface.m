@@ -42,21 +42,24 @@ end
 if roof == 1 && orientation == 1
     disp('The most optimal angle is 43 degrees. Angle_Optimization.m');
     angle = 43;
-    irr = south_face(angle,surface_area,ray);
+    irr = south_face(angle,ray);
 elseif roof == 1 && orientation == 2
     disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
     angle = 35;
 elseif roof == 2 && orientation == 1
-    irr = south_face(roof_angle,surface_area,ray);
+    irr = south_face(roof_angle,ray);
 else
-    irr = east_west(roof_angle,surface_area,ray);
+    irr = east_west(roof_angle,ray);
 end
 
 disp('Thank you. Performing calculations...');
 
 %%
-[Efficiency,Tz] = Efficiency(LG_Neon_5,irr);
-[pf,injectie,consumptie]=Power_Flow(Efficiency,irr, load);
+[irr_monthly] = monthly_irr(irr);
+%%
+
+[Efficiency,Tz] = Efficiency(LG_Neon_5,irr_monthly);
+[pf,injectie,consumptie]= Power_Flow(Efficiency,irr, load);
 
 %[Efficiency,Tz] = Efficiency(LG_Neon_5,irr_monthly,load, solar_area);
 
