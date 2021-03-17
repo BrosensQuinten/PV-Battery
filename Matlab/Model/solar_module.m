@@ -11,7 +11,8 @@ classdef solar_module < dynamicprops
         power_temperature_coef = 0 % %/degree celsius
         price = 0; %in euros
         lifetime = 0;
-        
+        nominal_voltage = 0;
+        nominal_current = 0;
     end
     
     methods
@@ -26,6 +27,7 @@ classdef solar_module < dynamicprops
                 power_temperature_coef = 0 % %/degree celsius
                 price = 0 %in euros
                 lifetime = 0;
+                nominal_voltage = 0;
            end
             obj.module_name = module_name;
             obj.module_type = module_type;
