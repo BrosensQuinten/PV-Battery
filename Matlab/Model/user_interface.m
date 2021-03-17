@@ -55,9 +55,11 @@ end
 disp('Thank you. Performing calculations...');
 
 %%
+solar_area = 1;
 
-% [pf,injectie,consumptie]=Power_Flow(LG_Neon_5,irr, load, solar_area);
-[Efficiency,Tz] = Efficiency(LG_Neon_5,irr_monthly, solar_area);
+[pf,injectie,consumptie]=Power_Flow(LG_Neon_5,irr, load_15m, solar_area);
+
+%[Efficiency,Tz] = Efficiency(LG_Neon_5,irr_monthly,load, solar_area);
 
 %Conversion to actual generated power (depends on efficiency solar panels);
 %Pgen(:,1) = 10^(-3)*eta * irr(:,1); (conversion to kW)
