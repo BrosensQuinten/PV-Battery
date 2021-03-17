@@ -55,8 +55,8 @@ end
 disp('Thank you. Performing calculations...');
 
 %%
-
-[pf,injectie,consumptie]=Power_Flow(LG_Neon_5,irr, load);
+[Efficiency,Tz] = Efficiency(LG_Neon_5,irr);
+[pf,injectie,consumptie]=Power_Flow(Efficiency,irr, load);
 
 %[Efficiency,Tz] = Efficiency(LG_Neon_5,irr_monthly,load, solar_area);
 
