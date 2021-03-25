@@ -4,7 +4,11 @@
 %%%%%%% Which technical components are used? %%%%%%%%%%%%%%%%%
 %these are data classes (import possibly necessary)
 
-solar_panel = LG_Neon_5;
+solar_name = ["sunpower_maxeon_3.mat", "Panasonic.mat", "LG_Neon_5.mat", "JA_SOLAR.mat", "Canadian_solar.mat"];
+for i = 1:size(solar_name, 2) 
+    load(fullfile(pwd, "Data\Solar module data\",solar_name(i)));
+end
+
 inverter = ''; % two cases: directly from solar panel to the grid or from battery to grid
 DC_converter = ''; % used for battery
 battery = '';
@@ -13,8 +17,10 @@ battery = '';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % RUN ONE TIME TO SAVE TIME %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if exist('ray') == 0
+    ray = straal(); % kan je 1 keer runnen en dan scenario's vergelijken.
+end
 
-% ray = straal(); % kan je 1 keer runnen en dan scenario's vergelijken.
 % filename = 'Load_profile_final.xlsx';
 % load_15m = readtable(filename);
 % load = load_15m{:,2};
@@ -80,7 +86,7 @@ end
 %%%% efficiency calculation solar panel (needed for power flow) %%%%%
 [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
 
-[eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
+[eff,Tz] = Efficiency("JA_SOLAR,irr_monthly); %adapt efficiencies to monthly temperatures
 
 %%
 
