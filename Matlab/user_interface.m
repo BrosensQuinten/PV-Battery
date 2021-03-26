@@ -3,12 +3,12 @@
 
 %%%%%%% Which technical components are used? %%%%%%%%%%%%%%%%%
 %these are data classes (import possibly necessary)
-
-solar_name = ["sunpower_maxeon_3.mat", "Panasonic.mat", "LG_Neon_5.mat", "JA_SOLAR.mat", "Canadian_solar.mat"];
-for i = 1:size(solar_name, 2) 
-    load(fullfile(pwd, "Data\Solar module data\",solar_name(i)));
+if exist('solar_name') == 0
+    solar_name = ["sunpower_maxeon_3.mat", "Panasonic.mat", "LG_Neon_5.mat", "JA_SOLAR.mat", "Canadian_solar.mat"];
+    for i = 1:size(solar_name, 2) 
+        load(fullfile(pwd, "Data\Solar module data\",solar_name(i)));
+    end
 end
-
 inverter = ''; % two cases: directly from solar panel to the grid or from battery to grid
 DC_converter = ''; % used for battery
 battery = '';
@@ -21,7 +21,7 @@ if exist('ray') == 0
     ray = straal(); % kan je 1 keer runnen en dan scenario's vergelijken.
 end
 
-if exist('Load_profile') == 0
+if exist('Loadprofilefinal') == 0
     load(fullfile(pwd, "Data\Load_profile.mat")); % kan je 1 keer runnen en dan scenario's vergelijken.
     load = Loadprofilefinal{:,2};
 end
@@ -31,9 +31,10 @@ end
 
 % USEFULL DECLARATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-roof_area = 15; % updaten met merijn
+roof_width = 12.37; % updaten met merijn
+roof_height = 4.42; %schuine hoogte van dak
 roof_angle = 30; %only used for gable roof update
-surface_area = roof_area; %oppervlakte aan zonnepanelen, kan later nog variabel worden miss?
+%surface_area = roof_area; %oppervlakte aan zonnepanelen, kan later nog variabel worden miss?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%% DEFINE USER INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,6 +53,12 @@ elseif (orientation ~= 1) && (orientation ~= 2)
     disp('That input is unvalid! Answer with "1" or "2" ');
 end
 
+fill = input('Is the roof entirely filled with panels (1) or just enough to compensate the load (2)?: ');
+if isempty(fill) == 1
+    return;
+elseif (fill ~= 1) && (fill ~= 2)
+    disp('That input is unvalid! Answer with "1" or "2" ');
+end
 tariff = input('Which tariff is used? Prosumer (1) or self_consuming (2)?: ');
 if  isempty(tariff) == 1
     return;
@@ -70,27 +77,94 @@ disp('Thank you. Performing calculations...');
 %%
 %%%%%%%%%%% Calculate total received power (total irradiance) %%%%%%%%%
 
-if roof == 1 && orientation == 1
+
+
+if roof == 1 && orientation == 1 && fill == 1
     disp('The most optimal angle is 43 degrees. Angle_Optimization.m');
     angle = 43;
+    roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
+    surface_area = roof_area;
     irr = south_face(angle,ray);
-elseif roof == 1 && orientation == 2
+    [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
+    [eff,Tz] = Efficiency(JA_SOLAR,irr_monthly); %adapt efficiencies to monthly temperatures
+elseif roof == 1 && orientation == 1 && fill == 2
+    disp('The most optimal angle is 43 degrees. Angle_Optimization.m');
+    angle = 43;
+    roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
+    irr = south_face(angle,ray);
+    [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
+    [eff,Tz] = Efficiency(JA_SOLAR,irr_monthly); %adapt efficiencies to monthly temperatures
+    surface_area = minimum_area(eff,irr,load);
+    if surface_area > roof_area
+        surface_area = roof_area;
+        disp('The entire roof is used.')
+    end
+    disp('The used roof area is ');
+    disp(surface_area);
+elseif roof == 1 && orientation == 2 && fill == 1
     disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
     angle = 35;
+    roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
     irr = east_west(angle,ray);
-elseif roof == 2 && orientation == 1
+    [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
+    [eff,Tz] = Efficiency(JA_SOLAR,irr_monthly); %adapt efficiencies to monthly temperatures
+    surface_area = roof_area;
+elseif roof == 1 && orientation == 2 && fill == 2
+    disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
+    angle = 35;
+    roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
+    irr = east_west(angle,ray);
+    [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
+    [eff,Tz] = Efficiency(JA_SOLAR,irr_monthly); %adapt efficiencies to monthly temperatures
+    surface_area = minimum_area(eff,irr,load);
+    if surface_area > roof_area
+        surface_area = roof_area;
+        disp('The entire roof is used.')
+    end
+    disp('The used roof area is ');
+    disp(surface_area);
+elseif roof == 2 && orientation == 1 && fill ==1
     irr = south_face(roof_angle,ray);
+    [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
+    [eff,Tz] = Efficiency(JA_SOLAR,irr_monthly); %adapt efficiencies to monthly temperatures
+    roof_area = roof_width*roof_height;
+    surface_area = roof_area;
+elseif roof == 2 && orientation == 1 && fill ==2
+    irr = south_face(roof_angle,ray);
+    [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
+    [eff,Tz] = Efficiency(JA_SOLAR,irr_monthly); %adapt efficiencies to monthly temperatures
+    roof_area = roof_width*roof_height;
+    surface_area = minimum_area(eff,irr,load);
+    if surface_area > roof_area
+        surface_area = roof_area;
+        disp('The entire roof is used.')
+    end
+    disp('The used roof area is ');
+    disp(surface_area);
+elseif roof == 2 && orientation == 2 && fill ==1
+    irr = east_west(roof_angle,ray);
+    [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
+    [eff,Tz] = Efficiency(JA_SOLAR,irr_monthly); %adapt efficiencies to monthly temperatures
+    roof_area = 2*roof_width*roof_height;
+    surface_area = roof_area;
 else
     irr = east_west(roof_angle,ray);
+    [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
+    [eff,Tz] = Efficiency(JA_SOLAR,irr_monthly); %adapt efficiencies to monthly temperatures
+    roof_area = roof_width*roof_height;
+    surface_area = minimum_area(eff,irr,load);
+    if surface_area > roof_area
+        surface_area = roof_area;
+        disp('The entire roof is used.')
+    end
+    disp('The used roof area is ');
+    disp(surface_area);
 end
 
 
 
 %%
 %%%% efficiency calculation solar panel (needed for power flow) %%%%%
-[irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
-
-[eff,Tz] = Efficiency(JA_SOLAR,irr_monthly); %adapt efficiencies to monthly temperatures
 
 %%
 
