@@ -6,7 +6,7 @@ month_indices = [1 44641 84961 129541 172741 217381 260581 305221 349861 393061 
 
 length = size(irr,1);
 pf = zeros(length,1);
-error =100;
+error = 100;
 surface_area = 0;
 while error > 20
 surface_area = surface_area+1;
@@ -21,7 +21,7 @@ for i=1:12
     gen = surface_area*eff*irr/1000; % gedeeld door 1000 om in kW te zetten
     
     j = 0;
-    counter = 1;
+    counter = 0; % dit moet nul zijn, right?
     
     while j == 0
 
@@ -40,7 +40,9 @@ for i=1:12
             
     end
 end
-   error = consumptie - injectie; 
+error = consumptie - injectie; %Het verschil wordt nu geoptimaliseerd, maar de absolute waarden kunnen
+%nog steeds zeer groot zijn. Misschien een minimum som bepalen? (cons + inj
+%minimaliseren)
 
 end
 Optimal_area = surface_area;

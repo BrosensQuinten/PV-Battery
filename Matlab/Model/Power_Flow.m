@@ -18,7 +18,7 @@ for i=1:12
     gen = surface_area*eff*irr/1000; % gedeeld door 1000 om in kW te zetten
     
     j = 0;
-    counter = 1;
+    counter = 0; % dit moet nul zijn, right?
     
     while j == 0
 
