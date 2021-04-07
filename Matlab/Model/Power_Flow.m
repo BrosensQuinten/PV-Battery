@@ -1,4 +1,4 @@
-function [pf,injectie,consumptie] = Power_Flow(Efficiency,irr,load, surface_area)
+function [pf,injectie,consumptie] = Power_Flow(Efficiency,irr,load, surface_area, invertor)
 
 
 month_indices = [1 44641 84961 129541 172741 217381 260581 305221 349861 393061 437761 480961 525601];
@@ -14,7 +14,7 @@ consumptie = 0;
     
 for i=1:12
     
-    eff = Efficiency(i);
+    eff = Efficiency(i)*invertor.efficiency;
     gen = surface_area*eff*irr/1000; % gedeeld door 1000 om in kW te zetten
     
     j = 0;
@@ -25,7 +25,11 @@ for i=1:12
         pf(index,1) = (gen(index,1) - load(counter+1,1)); 
 
         if pf(index,1) > 0
-            injectie = injectie + pf(index,1)/60; 
+            if injectie < invertor.rated_power
+                injectie = injectie + pf(index,1)/60; 
+            else
+                injectie = invertor.rated_power;
+            end
         else 
             consumptie = consumptie - pf(index,1)/60;
         end

@@ -90,6 +90,7 @@ if roof == 1 && orientation == 1 && fill == 1
     angle = 43;
     roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
     surface_area = roof_area;
+    inv = Fronius_Symo;
     irr = south_face(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
@@ -179,18 +180,15 @@ end
 %%%% efficiency calculation solar panel (needed for power flow) %%%%%
 %momenteel al hierboven berekend
 
-%%
+%% POWER FLOW CALCULATION
 
 [pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area); 
 
 
 
-%Conversion to actual generated power (depends on efficiency solar panels);
+%% ELECTRICITY COST CALCULATION
+[total_cost,capex,opex] = Tariffs(tariff,pf,injectie,consumptie);
 
-
-
-
-%%
 
 disp('Calculations done.');
 
