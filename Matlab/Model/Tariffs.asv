@@ -3,8 +3,31 @@ function [total_cost,capex,opex] = Tariffs(tariff,pf,injectie,consumptie)
 %capex = just sum of all installation costs
 
 
-%opex -> depends on tariff used (1 = prosumer/netmetering, 2 = capacity)
 
+
+
+%opex -> depends on tariff used (1 = prosumer/netmetering, 2 = capacity)
+%don't forget, together with TSO/DSO tariff also additional costs are payed
+%maintenance, replace expanses
+
+if tariff == 1
+    DSO_prosum = 65.82*MAX_AC_INVERTER
+    DSO_perkwh = (0.0022583+0.0004138+0.0020559+0.0446218)*(consumptie - injectie)
+    DSO_gen = 98 
+    DSO_pricing = DSO_pricing * 1.21 % BTW
+    
+    
+else
+    
+    
+    
+end
+
+
+
+
+
+%total_cost = cap + opex -> to be minimized. 
 
 
 
