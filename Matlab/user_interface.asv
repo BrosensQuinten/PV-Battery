@@ -124,7 +124,7 @@ elseif roof == 1 && orientation == 1 && fill == 2
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
     surface_area = minimum_area(eff,irr,load,solar_panel);
     nb_panels = floor(surface_area/solar_panel.area);
-    while nb_panels*solar_panel.nominal_voltage > inv.input_DC_voltage
+    while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
         disp('The voltage is too high.');
         nb_panels = nb_panels-1;
         surface_area = nb_panels*solar_panel.area;
@@ -181,7 +181,7 @@ elseif roof == 2 && orientation == 1 && fill ==1
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
     roof_area = roof_width*roof_height;
      nb_panels = floor(roof_area/solar_panel.area);
-    while nb_panels*solar_panel.nominal_voltage > inv.input_DC_voltage
+    while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
         disp('The voltage is too high.');
         nb_panels = nb_panels-1;
     end
@@ -194,7 +194,7 @@ elseif roof == 2 && orientation == 1 && fill ==2
     roof_area = roof_width*roof_height;
     surface_area = minimum_area(eff,irr,load,solar_panel);
     nb_panels = floor(surface_area/solar_panel.area);
-    while nb_panels*solar_panel.nominal_voltage > inv.input_DC_voltage
+    while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
         disp('The voltage is too high.');
         nb_panels = nb_panels-1;
         surface_area = nb_panels*solar_panel.area;
@@ -253,7 +253,7 @@ end
 %% BATTERY FLOW
 battery_capacity = 13.5; %in kwh
 
-[pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,irr,load, surface_area, battery_capacity);
+[pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,Solar_Edge_3, irr,load, surface_area, battery_capacity, 0.97);
 
 %% create plots
 plot_len = 35040;
@@ -271,7 +271,8 @@ subplot(2,2,4)
 plot(load(1:plot_len));
 title('load')
 %% ELECTRICITY COST CALCULATION
-[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht);
+[cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
+[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht);
 
 
 disp('Calculations done.');

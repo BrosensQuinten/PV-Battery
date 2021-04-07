@@ -1,4 +1,4 @@
-function [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inverter,tot_day_con,tot_night_con,nb_panels)
+function [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inverter,cons_dag,cons_nacht,net_cons_dag, net_cons_nacht,nb_panels)
 
 %capex = just sum of all installation costs
 capex = solar_panel.price*nb_panels + inverter.price; %batterijkost+installatiekost hier nog bij 
@@ -11,20 +11,25 @@ capex = solar_panel.price*nb_panels + inverter.price; %batterijkost+installatiek
 %maintenance, replace expanses
 
 MAX_AC_INVERTER = invertor.rated_power; %aanpassen
-tot_con = tot_day_con + tot_night_con;
+
 
 %DSO_cost per year! (2020)
 if tariff == 1
+    tot_net_con = net_cons_dag + net_cons_nacht;
     DSO_prosum = 65.82*MAX_AC_INVERTER; %EUR/year
-    DSO_perkwh = (0.0022583+0.0004138+0.0020559+0.0446218+0.0002022)*tot_con;
+    DSO_perkwh = (0.0022583+0.0004138+0.0020559+0.0446218+0.0002022)*tot_net_con;
     DSO_gen = 98; %just a price per year to measure data
-    DSO_day = 0.0401085 *tot_day_con;
-    DSO_night = 0.0240651*tot_night_con;
+    DSO_day = 0.0401085 *net_cons_dag;
+    DSO_night = 0.0240651*net_cons_nacht;
     DSO_tot_cost = (DSO_prosum + DSO_perkwh + DSO_gen + DSO_day + DSO_night) * 1.21; % BTW
     
 else
-    
-    
+    tot_con = cons_dag + cons_nacht;
+    DSO_perkwh = (0.0022583+0.0004138+0.0020559+0.0446218+0.0002022)*tot_con;
+    DSO_gen = 98; %just a price per year to measure data
+    DSO_day = 0.0401085 *cons_dag;
+    DSO_night = 0.0240651*cons_nacht;
+    DSO_tot_cost = (DSO_prosum + DSO_perkwh + DSO_gen + DSO_day + DSO_night) * 1.21; % BTW
     
 end
 

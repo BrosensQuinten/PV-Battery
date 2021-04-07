@@ -271,7 +271,8 @@ subplot(2,2,4)
 plot(load(1:plot_len));
 title('load')
 %% ELECTRICITY COST CALCULATION
-[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht);
+[cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
+[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nbpanels);
 
 
 disp('Calculations done.');
