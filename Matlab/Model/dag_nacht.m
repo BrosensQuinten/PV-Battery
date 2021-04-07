@@ -18,13 +18,16 @@ for i = 1:52
     pf_nacht(:,6+(i-1)*7) = reshaped_pf(:,6+(i-1)*7);
     pf_nacht(:,7+(i-1)*7) = reshaped_pf(:,7+(i-1)*7);
 end
-cons_list_dag = zeros(365,1);
-cons_list_nacht = zeros(365,1);
-for i = 1:365
-    cons_list_dag(i,1) = sum(pf_dag(:,i));
-    cons_list_nacht(i,1) = sum(pf_nacht(:,i));
-end
-cons_dag = -sum(cons_list_dag(:,1));
-cons_nacht = -sum(cons_list_nacht(:,1));
+% cons_list_dag = zeros(365,1);
+% cons_list_nacht = zeros(365,1);
+% for i = 1:365
+%     cons_list_dag(i,1) = sum(pf_dag(:,i));
+%     cons_list_nacht(i,1) = sum(pf_nacht(:,i));
+% end
+% cons_dag = -sum(cons_list_dag(:,1));
+% cons_nacht = -sum(cons_list_nacht(:,1));
+
+cons_dag = -sum(sum(pf_dag));
+cons_nacht = -sum(sum(pf_nacht));
 end
 
