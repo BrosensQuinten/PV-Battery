@@ -209,7 +209,7 @@ end
 %% BATTERY FLOW
 battery_capacity = 13.5; %in kwh
 
-[pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,irr,load, surface_area, battery_capacity);
+[pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,Solar_Edge_3, irr,load, surface_area, battery_capacity, 0.97);
 
 %% create plots
 plot_len = 35040;
