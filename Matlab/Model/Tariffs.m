@@ -10,7 +10,7 @@ function [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inverter,tot_day_c
 %don't forget, together with TSO/DSO tariff also additional costs are payed
 %maintenance, replace expanses
 
-MAX_AC_INVERTER = inverter.maxoutput; %aanpassen
+MAX_AC_INVERTER = invertor.rated_power; %aanpassen
 tot_con = tot_day_con + tot_night_con;
 
 %DSO_cost per year! (2020)
