@@ -191,7 +191,10 @@ end
 
 [pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area); 
 
+%% BATTERY FLOW
+battery_capacity = 13.5; %in kwh
 
+[pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,irr,load, surface_area, battery_capacity);
 
 %% ELECTRICITY COST CALCULATION
 [total_cost,capex,opex] = Tariffs(tariff,pf,injectie,consumptie);
