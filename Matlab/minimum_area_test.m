@@ -1,17 +1,22 @@
-function [Optimal_area] = minimum_area(Efficiency,irr,load,solar_panel)
+function [Optimal_area,error] = minimum_area(Efficiency,irr,load)
 
 
 month_indices = [1 44641 84961 129541 172741 217381 260581 305221 349861 393061 437761 480961 525601];
 
-opp = solar_panel.area;
+
 length = size(irr,1);
 pf = zeros(length,1);
 error = 100;
 surface_area = 0;
-while error > 20
-surface_area = surface_area+opp;
-index = 1;
+test = 0;
+prev = 0;
 
+while test == 0
+    
+surface_area = surface_area+1;
+
+
+index = 1;
 injectie = 0;
 consumptie = 0;
     
@@ -40,10 +45,27 @@ for i=1:12
             
     end
 end
-error = consumptie - injectie; %Het verschil wordt nu geoptimaliseerd, maar de absolute waarden kunnen
+error = consumptie + injectie; %Het verschil wordt nu geoptimaliseerd, maar de absolute waarden kunnen
 %nog steeds zeer groot zijn. Misschien een minimum som bepalen? (cons + inj
 %minimaliseren)
 
+if prev == 0
+    prev = consumptie + injectie;
+else
+    if error <= prev
+        
+        prev = consumptie + injectie;
+        
+    else 
+        test = 1;
+        surface_area = surface_area - 1;
+        
+    end
 end
+
+end
+
 Optimal_area = surface_area;
+
+
 end
