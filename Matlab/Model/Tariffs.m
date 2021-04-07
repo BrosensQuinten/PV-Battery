@@ -43,7 +43,7 @@ ES_tot_cost = ES_fixed_cost + ES_day + ES_night;
 opex = TSO_total + DSO_tot_cost + ES_tot_cost;
 
 
-
+total_cost = opex + capex; 
 
 
 
