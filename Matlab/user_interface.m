@@ -90,12 +90,14 @@ if roof == 1 && orientation == 1 && fill == 1
     angle = 43;
     roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
     surface_area = roof_area;
+    inv = Fronius_Symo;
     irr = south_face(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
 elseif roof == 1 && orientation == 1 && fill == 2
     disp('The most optimal angle is 43 degrees. Angle_Optimization.m');
     angle = 43;
+    inv = Solar_Edge_4;
     roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
     irr = south_face(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -112,6 +114,7 @@ elseif roof == 1 && orientation == 1 && fill == 2
 elseif roof == 1 && orientation == 2 && fill == 1
     disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
     angle = 35;
+    inv = Fronius_Symo;
     roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
     irr = east_west(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -120,6 +123,7 @@ elseif roof == 1 && orientation == 2 && fill == 1
 elseif roof == 1 && orientation == 2 && fill == 2
     disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
     angle = 35;
+    inv = Solar_Edge_3;
     roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
     irr = east_west(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -135,12 +139,14 @@ elseif roof == 1 && orientation == 2 && fill == 2
     
 elseif roof == 2 && orientation == 1 && fill ==1
     irr = south_face(roof_angle,ray);
+    inv = Fronius_Symo;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
     roof_area = roof_width*roof_height;
     surface_area = roof_area;
 elseif roof == 2 && orientation == 1 && fill ==2
     irr = south_face(roof_angle,ray);
+    inv = Solar_Edge_4;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
     roof_area = roof_width*roof_height;
@@ -155,12 +161,14 @@ elseif roof == 2 && orientation == 1 && fill ==2
     
 elseif roof == 2 && orientation == 2 && fill ==1
     irr = east_west(roof_angle,ray);
+    inv = Fronius_Symo;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
     roof_area = 2*roof_width*roof_height;
     surface_area = roof_area;
 else
     irr = east_west(roof_angle,ray);
+    inv = Solar_Edge_3;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
     roof_area = 2*roof_width*roof_height; %is dit oke?
