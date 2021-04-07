@@ -33,8 +33,14 @@ TSO_withBTW =  0.0171844*1.21; %EUR/kwh with BTW
 TSO_noBTW = 0.00329; %EUR/kwh
 TSO_total = (TSO_withBTW + TSO_noBTW)*tot_con;
 
-%total_cost = cap + opex -> to be minimized. 
+%Average electricity cost energy supplier (4 different suppliers)
+ES_fixed_cost = 47.72; 
+ES_day = 0.085375 *tot_day_con;
+ES_night = 0.067275 * tot_day_night;
+ES_tot_cost = ES_fixed_cost + ES_day + ES_night;
 
+%total_cost = cap + opex -> to be minimized. 
+opex = TSO_total + DSO_tot_cost + ES_tot_cost;
 
 
 
