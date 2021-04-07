@@ -1,6 +1,10 @@
 %                        User interface                      %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%!!!IMPORTANT!!! current directory has to be  ..\PV_battery\Matlab or the
+%code doesnt work. Also all subfolders have to be added to the path.
+
+
 %%%%%%% Which technical components are used? %%%%%%%%%%%%%%%%%
 %these are data classes (import possibly necessary)
 if exist('solar_name') == 0
@@ -10,7 +14,15 @@ if exist('solar_name') == 0
     end
 end
 solar_panel = JA_SOLAR;
-inverter = ''; % two cases: directly from solar panel to the grid or from battery to grid
+
+% load in inverters into workspace
+if exist('inverter_names') == 0
+    inverter_names = ["Solar_Edge_4.mat", "Solar_Edge_3.mat", "Fronius_Symo.mat"];
+    for i = 1:size(inverter_names, 2) 
+        load(fullfile(pwd, "Data\Inverters\",inverter_names(i)));
+    end
+end % two cases: directly from solar panel to the grid or from battery to grid
+
 DC_converter = ''; % used for battery
 battery = '';
 %additional safety equipment?
@@ -36,6 +48,9 @@ roof_width = 12.37; % updaten met merijn
 roof_height = 4.42; %schuine hoogte van dak
 roof_angle = 30; %only used for gable roof 
 %surface_area = roof_area; %oppervlakte aan zonnepanelen, kan later nog variabel worden miss?
+
+
+%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%% DEFINE USER INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -189,13 +204,28 @@ end
 
 %% POWER FLOW CALCULATION
 
-[pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area); 
+[pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, Solar_Edge_3 ); 
 
 %% BATTERY FLOW
 battery_capacity = 13.5; %in kwh
 
 [pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,irr,load, surface_area, battery_capacity);
 
+%% create plots
+plot_len = 35040;
+figure
+subplot(2,2,1)
+plot(pf_bat(1:plot_len*15));
+title('pf bat')
+subplot(2,2,2)
+plot(battery_charge(1:plot_len*15));
+title('battery charge')
+subplot(2,2,3)
+plot(irr(1:plot_len*15));
+title('irr')
+subplot(2,2,4)
+plot(load(1:plot_len));
+title('load')
 %% ELECTRICITY COST CALCULATION
 [total_cost,capex,opex] = Tariffs(tariff,pf,injectie,consumptie);
 

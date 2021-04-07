@@ -1,6 +1,10 @@
 %                        User interface                      %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%!!!IMPORTANT!!! current directory has to be  ..\PV_battery\Matlab or the
+%code doesnt work. Also all subfolders have to be added to the path.
+
+
 %%%%%%% Which technical components are used? %%%%%%%%%%%%%%%%%
 %these are data classes (import possibly necessary)
 if exist('solar_name') == 0
@@ -10,7 +14,15 @@ if exist('solar_name') == 0
     end
 end
 solar_panel = JA_SOLAR;
-inverter = ''; % two cases: directly from solar panel to the grid or from battery to grid
+
+% load in inverters into workspace
+if exist('inverter_names') == 0
+    inverter_names = ["Solar_Edge_4.mat", "Solar_Edge_3.mat", "Fronius_Symo.mat"];
+    for i = 1:size(inverter_names, 2) 
+        load(fullfile(pwd, "Data\Inverters\",inverter_names(i)));
+    end
+end % two cases: directly from solar panel to the grid or from battery to grid
+
 DC_converter = ''; % used for battery
 battery = '';
 %additional safety equipment?
@@ -36,6 +48,9 @@ roof_width = 12.37; % updaten met merijn
 roof_height = 4.42; %schuine hoogte van dak
 roof_angle = 30; %only used for gable roof 
 %surface_area = roof_area; %oppervlakte aan zonnepanelen, kan later nog variabel worden miss?
+
+
+%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%% DEFINE USER INPUTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -97,6 +112,7 @@ if roof == 1 && orientation == 1 && fill == 1
 elseif roof == 1 && orientation == 1 && fill == 2
     disp('The most optimal angle is 43 degrees. Angle_Optimization.m');
     angle = 43;
+    inv = Solar_Edge_4;
     roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
     irr = south_face(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -113,6 +129,7 @@ elseif roof == 1 && orientation == 1 && fill == 2
 elseif roof == 1 && orientation == 2 && fill == 1
     disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
     angle = 35;
+    inv = Fronius_Symo;
     roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
     irr = east_west(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -121,6 +138,7 @@ elseif roof == 1 && orientation == 2 && fill == 1
 elseif roof == 1 && orientation == 2 && fill == 2
     disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
     angle = 35;
+    inv = Solar_Edge_3;
     roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
     irr = east_west(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -136,12 +154,14 @@ elseif roof == 1 && orientation == 2 && fill == 2
     
 elseif roof == 2 && orientation == 1 && fill ==1
     irr = south_face(roof_angle,ray);
+    inv = Fronius_Symo;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
     roof_area = roof_width*roof_height;
     surface_area = roof_area;
 elseif roof == 2 && orientation == 1 && fill ==2
     irr = south_face(roof_angle,ray);
+    inv = Solar_Edge_4;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
     roof_area = roof_width*roof_height;
@@ -156,12 +176,14 @@ elseif roof == 2 && orientation == 1 && fill ==2
     
 elseif roof == 2 && orientation == 2 && fill ==1
     irr = east_west(roof_angle,ray);
+    inv = Fronius_Symo;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
     roof_area = 2*roof_width*roof_height;
     surface_area = roof_area;
 else
     irr = east_west(roof_angle,ray);
+    inv = Solar_Edge_3;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
     roof_area = 2*roof_width*roof_height; %is dit oke?
@@ -182,10 +204,28 @@ end
 
 %% POWER FLOW CALCULATION
 
-[pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area); 
+[pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area ); 
 
+%% BATTERY FLOW
+battery_capacity = 0; %in kwh
 
+[pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,irr,load, surface_area, battery_capacity);
 
+%% create plots
+plot_len = 1000;
+figure
+subplot(2,2,1)
+plot(pf_bat(1:plot_len*15));
+title('pf bat')
+subplot(2,2,2)
+plot(battery_charge(1:plot_len*15));
+title('battery charge')
+subplot(2,2,3)
+plot(irr(1:plot_len*15));
+title('irr')
+subplot(2,2,4)
+plot(load(1:plot_len));
+title('load')
 %% ELECTRICITY COST CALCULATION
 [total_cost,capex,opex] = Tariffs(tariff,pf,injectie,consumptie);
 
