@@ -1,7 +1,7 @@
 function [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inverter,cons_dag,cons_nacht,net_cons_dag, net_cons_nacht,nb_panels)
 
 %capex = just sum of all installation costs
-capex = solar_panel.price*nb_panels + inverter.price; %batterijkost+installatiekost hier nog bij 
+capex = solar_panel.price*nb_panels + inverter.price+installation_cost(nb_panels); %batterijkost+installatiekost hier nog bij 
 
 
 
