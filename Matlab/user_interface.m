@@ -179,20 +179,15 @@ end
 %%%% efficiency calculation solar panel (needed for power flow) %%%%%
 %momenteel al hierboven berekend
 
-%%
+%% POWER FLOW CALCULATION
 
 [pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area); 
 
-%[Efficiency,Tz] = Efficiency(LG_Neon_5,irr_monthly,load, solar_area);
-
-%Conversion to actual generated power (depends on efficiency solar panels);
-%Pgen(:,1) = 10^(-3)*eta * irr(:,1); (conversion to kW)
-%Compare Pgen with Pload -> net power consumption/generation?
 
 
+%% ELECTRICITY COST CALCULATION
+[total_cost,capex,opex] = Tariffs(tariff,pf,injectie,consumptie);
 
-
-%%
 
 disp('Calculations done.');
 
