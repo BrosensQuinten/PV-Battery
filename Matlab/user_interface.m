@@ -248,7 +248,7 @@ end
 
 %% POWER FLOW CALCULATION
 
-[pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, Solar_Edge_3 ); 
+[gen_pf,pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, Solar_Edge_3 ); 
 
 % %% BATTERY FLOW
 % battery_capacity = 13.5; %in kwh
