@@ -1,4 +1,4 @@
-function [pf,injectie,consumptie] = Power_Flow(Efficiency,irr,load, surface_area, invertor)
+function [gen_pf,pf,injectie,consumptie] = Power_Flow(Efficiency,irr,load, surface_area, invertor)
 
 
 month_indices = [1 44641 84961 129541 172741 217381 260581 305221 349861 393061 437761 480961 525601];
@@ -6,7 +6,7 @@ month_indices = [1 44641 84961 129541 172741 217381 260581 305221 349861 393061 
 
 length = size(irr,1);
 pf = zeros(length,1);
-
+gen_pf = zeros(length,1);
 
 index = 1;
 
@@ -23,8 +23,8 @@ for i=1:12
     
     while j == 0
 
-        pf(index,1) = (gen(index,1) - load(counter+1,1)); 
-        
+        pf(index,1) = gen(index,1) - load(counter+1,1); 
+        gen_pf(index,1) = gen(index,1);
         if pf(index,1) > 0
             if injectie < invertor.rated_power
                 injectie = injectie + pf(index,1)/60; 

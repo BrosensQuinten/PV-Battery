@@ -43,9 +43,9 @@ end
 % load = load_15m{:,2};
 
 % USEFULL DECLARATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 roof_width = 12.37; % updaten met merijn
 roof_height = 4.42; %schuine hoogte van dak
+
 roof_angle = 30; %only used for gable roof 
 %surface_area = roof_area; %oppervlakte aan zonnepanelen, kan later nog variabel worden miss?
 
@@ -248,31 +248,31 @@ end
 
 %% POWER FLOW CALCULATION
 
-[pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, Solar_Edge_3 ); 
+[gen_pf,pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, Solar_Edge_3 ); 
 
-%% BATTERY FLOW
-battery_capacity = 13.5; %in kwh
+% %% BATTERY FLOW
+% battery_capacity = 13.5; %in kwh
+% 
+% [pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,Solar_Edge_3, irr,load, surface_area, battery_capacity, 0.97);
 
-[pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,Solar_Edge_3, irr,load, surface_area, battery_capacity, 0.97);
-
-%% create plots
-plot_len = 35040;
-figure
-subplot(2,2,1)
-plot(pf_bat(1:plot_len*15));
-title('pf bat')
-subplot(2,2,2)
-plot(battery_charge(1:plot_len*15));
-title('battery charge')
-subplot(2,2,3)
-plot(irr(1:plot_len*15));
-title('irr')
-subplot(2,2,4)
-plot(load(1:plot_len));
-title('load')
+% %% create plots
+% plot_len = 35040;
+% figure
+% subplot(2,2,1)
+% plot(pf_bat(1:plot_len*15));
+% title('pf bat')
+% subplot(2,2,2)
+% plot(battery_charge(1:plot_len*15));
+% title('battery charge')
+% subplot(2,2,3)
+% plot(irr(1:plot_len*15));
+% title('irr')
+% subplot(2,2,4)
+% plot(load(1:plot_len));
+% title('load')
 %% ELECTRICITY COST CALCULATION
 [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
-[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nbpanels);
+[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels);
 
 
 disp('Calculations done.');
