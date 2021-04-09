@@ -23,7 +23,7 @@ for i=1:12
     
     while j == 0
 
-        pf(index,1) = (gen(index,1) - load(counter+1,1)); 
+        pf(index,1) = gen(index,1); 
         
         if pf(index,1) > 0
             if injectie < invertor.rated_power
