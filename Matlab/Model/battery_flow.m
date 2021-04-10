@@ -32,16 +32,17 @@ for i=1:12
                 pf(index,1) = 0;
             else
                 pf(index,1) = pf(index,1) + (battery_charge(index,1) - battery_capacity)/battery_efficiency;
-                battery_charge(index+1) = battery_capacity;
-            injectie = injectie + pf(index,1); 
+                battery_charge(index+1,1) = battery_capacity;
             end
+            injectie = injectie + pf(index,1); 
+            
         else 
             if pf(index, 1) + battery_charge(index, 1) > 0
                 battery_charge(index+1,1) = battery_charge(index,1) + pf(index,1)/battery_efficiency;
                 pf(index,1) = 0;
             else
                 pf(index,1) = pf(index,1) + battery_charge(index,1)*battery_efficiency;
-                battery_charge(index+1) = 0;  
+                battery_charge(index+1,1) = 0;  
             end
             consumptie = consumptie - pf(index,1);
         end
