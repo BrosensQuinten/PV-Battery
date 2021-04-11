@@ -247,31 +247,38 @@ end
 %momenteel al hierboven berekend
 
 %% POWER FLOW CALCULATION
-
-[gen_pf,pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, Solar_Edge_3 ); 
-
+if bat == 2
+    [gen_pf,pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, Solar_Edge_3 ); 
+end
 %% BATTERY FLOW
-battery_capacity = 13.5; %in kwh
+if bat == 1
+    battery_capacity = 13.5; %in kwh
 
-[pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,Solar_Edge_3, irr,load, surface_area, battery_capacity, 0.97);
+    [pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,Solar_Edge_3, irr,load, surface_area, battery_capacity, 0.97);
 
-%% create plots
-plot_len = 35040;
-figure
-subplot(2,2,1)
-plot(pf_bat(1:plot_len*15));
-title('pf bat')
-subplot(2,2,2)
-plot(battery_charge(1:plot_len*15));
-title('battery charge')
-subplot(2,2,3)
-plot(irr(1:plot_len*15));
-title('irr')
-subplot(2,2,4)
-plot(load(1:plot_len));
-title('load')
+    % create plots
+    plot_len = 35040;
+    figure
+    subplot(2,2,1)
+    plot(pf_bat(1:plot_len*15));
+    title('pf bat')
+    subplot(2,2,2)
+    plot(battery_charge(1:plot_len*15));
+    title('battery charge')
+    subplot(2,2,3)
+    plot(irr(1:plot_len*15));
+    title('irr')
+    subplot(2,2,4)
+    plot(load(1:plot_len));
+    title('load')
+end
 %% ELECTRICITY COST CALCULATION
-[cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
+if bat == 1
+    [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(bat_pf);
+else
+    [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
+end
+
 [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels);
 
 
