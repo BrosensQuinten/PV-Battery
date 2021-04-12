@@ -30,9 +30,11 @@ for i=1:12
         if pf_kwh(index,1) > 0
             if pf_kwh(index, 1) + battery_charge(index, 1) < battery_capacity
                 battery_charge(index+1,1) = battery_charge(index,1) + battery_efficiency*pf_kwh(index,1);
+                pf(index,1) = 0;
                 pf_kwh(index,1) = 0;
             else
                 pf_kwh(index,1) = pf_kwh(index,1) + (battery_charge(index,1) - battery_capacity)/battery_efficiency;
+                pf(index,1) = pf_kwh(index,1)*60;
                 battery_charge(index+1,1) = battery_capacity;
             end
             injectie = injectie + pf_kwh(index,1); 
@@ -40,14 +42,15 @@ for i=1:12
         else 
             if pf_kwh(index, 1) + battery_charge(index, 1) > 0
                 battery_charge(index+1,1) = battery_charge(index,1) + pf_kwh(index,1)/battery_efficiency;
+                pf(index,1) = 0;
                 pf_kwh(index,1) = 0;
             else
                 pf_kwh(index,1) = pf_kwh(index,1) + battery_charge(index,1)*battery_efficiency;
+                pf(index,1) = pf_kwh(index,1)*60;
                 battery_charge(index+1,1) = 0;  
             end
             consumptie = consumptie - pf_kwh(index,1);
         end
-        pf(index,1) = pf_kwh(index,1)*60;
         counter = floor(index/15);
         index = index + 1;
         if ismember(index,month_indices)

@@ -254,7 +254,7 @@ end
 if bat == 1
     battery_capacity = 13.5; %in kwh
 
-    [pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,Solar_Edge_3, irr,load, surface_area, battery_capacity, 0.97);
+    [pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,Solar_Edge_3, irr,load, surface_area, battery_capacity, 0.97);
 
     % create plots
     plot_len = 35040;
@@ -274,7 +274,7 @@ if bat == 1
 end
 %% ELECTRICITY COST CALCULATION
 if bat == 1
-    [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(bat_pf);
+    [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf_bat);
 else
     [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
 end
