@@ -248,13 +248,13 @@ end
 
 %% POWER FLOW CALCULATION
 if bat == 2
-    [gen_pf,pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, Solar_Edge_3 ); 
+    [gen_pf,pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, inv); 
 end
 %% BATTERY FLOW
 if bat == 1
     battery_capacity = 13.5; %in kwh
 
-    [pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,Solar_Edge_3, irr,load, surface_area, battery_capacity, 0.97);
+    [pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, battery_capacity, 0.97);
 
     % create plots
     plot_len = 35040;
