@@ -29,7 +29,7 @@ else
     DSO_gen = 98; %just a price per year to measure data
     DSO_day = 0.0401085 *cons_dag;
     DSO_night = 0.0240651*cons_nacht;
-    DSO_tot_cost = (DSO_prosum + DSO_perkwh + DSO_gen + DSO_day + DSO_night) * 1.21; % BTW
+    DSO_tot_cost = (DSO_perkwh + DSO_gen + DSO_day + DSO_night) * 1.21; % BTW
     
 end
 
