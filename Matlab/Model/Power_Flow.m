@@ -26,10 +26,10 @@ for i=1:12
         pf(index,1) = gen(index,1) - load(counter+1,1); 
         gen_pf(index,1) = gen(index,1);
         if pf(index,1) > 0
-            if injectie < invertor.rated_power
+            if pf(index,1) < invertor.rated_power
                 injectie = injectie + pf(index,1)/60; 
             else
-                injectie = invertor.rated_power;
+                injectie = invertor.rated_power/60;
             end
         else 
             consumptie = consumptie - pf(index,1)/60;
