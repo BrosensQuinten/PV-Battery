@@ -30,6 +30,7 @@ for i=1:12
                 injectie = injectie + pf(index,1)/60; 
             else
                 injectie = invertor.rated_power/60;
+                pf(index,1) = invertor.rated_power;
             end
         else 
             consumptie = consumptie - pf(index,1)/60;
