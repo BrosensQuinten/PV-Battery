@@ -245,6 +245,10 @@ end
 %%
 %%%% efficiency calculation solar panel (needed for power flow) %%%%%
 %momenteel al hierboven berekend
+%% Reference Cost
+[ref_gen_pf,ref_pf,ref_injectie,ref_consumptie]=Power_Flow(eff,irr,load,0,inv);
+[ref_cons_dag, ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht] = dag_nacht(ref_pf);
+[ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels);
 
 %% POWER FLOW CALCULATION
 if bat == 2
