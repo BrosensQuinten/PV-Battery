@@ -456,20 +456,22 @@ end
 %%
 %%%% efficiency calculation solar panel (needed for power flow) %%%%%
 %momenteel al hierboven berekend
+battery = Tesla_powerwall;
 %% Reference Cost
 [ref_gen_pf,ref_pf,ref_injectie,ref_consumptie]=Power_Flow(eff,irr,load,0,inv);
 [ref_cons_dag, ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht] = dag_nacht(ref_pf);
-[ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels);
+[ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
 
 %% POWER FLOW CALCULATION
 if bat == 2
     [gen_pf,pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, inv); 
 end
 %% BATTERY FLOW
+battery = Tesla_powerwall;
 if bat == 1
-    %battery = Tesla_powerwall; %select battery
+    battery = Tesla_powerwall; %select battery
 
-    [gen_pf, pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, Tesla_powerwall);
+    [gen_pf, pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, battery);
 
 
 %% create plots
@@ -495,9 +497,11 @@ else
     [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
 end
 
-[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels);
-
-
+[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels,battery,bat);
+%% Payback Time and NPV
+payback_time = Payback_time(capex,opex,ref_opex,solar_panel, inv,battery,bat);
+disc_rate = 0.01;
+NPV = Net_present_value(disc_rate,capex,opex,ref_opex,solar_panel, inv, battery,bat);
 disp('Calculations done.');
 
 
