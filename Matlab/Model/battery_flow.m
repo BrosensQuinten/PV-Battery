@@ -1,4 +1,4 @@
-function [pf,injectie,consumptie, battery_charge] = battery_flow(Efficiency,inverter, irr,load, surface_area, battery_capacity, dc_dc_efficiency)
+function [pf,injectie,consumptie, battery_charge] = battery_flow(Efficiency,inverter, irr,load, surface_area, battery)
 %load in KW, battery charge in kwh
 
 month_indices = [1 44641 84961 129541 172741 217381 260581 305221 349861 393061 437761 480961 525601];
@@ -19,7 +19,7 @@ for i=1:12
     gen = surface_area*eff*irr/1000; % gedeeld door 1000 om in kW te zetten
     
     j = 0;
-    counter = 0; % dit moet nul zijn, right?
+    counter = 0; % dit moet nul zijn
     
     while j == 0
 
