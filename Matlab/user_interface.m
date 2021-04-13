@@ -259,10 +259,11 @@ end
 if bat == 1
     %battery = Tesla_powerwall; %select battery
 
-    [pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, Tesla_powerwall);
+    [gen_pf, pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, Tesla_powerwall);
 
-    % create plots
-    plot_len = 35040;
+    
+%% create plots
+    plot_len = 10000;
     figure
     subplot(2,2,1)
     plot(pf_bat(1:plot_len*15));

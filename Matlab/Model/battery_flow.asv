@@ -29,7 +29,6 @@ for i=1:12
     while j == 0
 
         pf(index,1) = (gen(index,1) - load(counter+1,1)); %/60 to convert from kwmin to kwh
-        gen_pf(index,1)= gen(index,1);
         pf_kwh(index,1) = pf(index,1)/60;
         
         if pf_kwh(index,1) > 0
