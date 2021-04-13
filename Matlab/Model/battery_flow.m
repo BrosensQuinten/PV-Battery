@@ -1,4 +1,4 @@
-function [pf,injectie,consumptie, battery_charge] = battery_flow(Efficiency,inverter, irr,load, surface_area, battery)
+function [pf,injectie,consumptie, battery_charge] = battery_flow(Efficiency,inverter, irr,load, surface_area, battery_efficiency)
 %load in KW, battery charge in kwh
 
 month_indices = [1 44641 84961 129541 172741 217381 260581 305221 349861 393061 437761 480961 525601];
