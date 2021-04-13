@@ -17,8 +17,8 @@ end
 for i = 1:52
     pf_dag(:,6+(i-1)*7) = 0;
     pf_dag(:,7+(i-1)*7) = 0;
-    pf_nacht(:,6+(i-1)*7) = reshaped_pf(:,6+(i-1)*7);
-    pf_nacht(:,7+(i-1)*7) = reshaped_pf(:,7+(i-1)*7);
+    pf_nacht(:,6+(i-1)*7) = reshaped_pf(:,6+(i-1)*7)/60;
+    pf_nacht(:,7+(i-1)*7) = reshaped_pf(:,7+(i-1)*7)/60;
 end
 % cons_list_dag = zeros(365,1);
 % cons_list_nacht = zeros(365,1);
@@ -34,7 +34,7 @@ net_cons_nacht = -sum(sum(pf_nacht));
 
 %now for gross consumption tariff: not with net meter
 pf_dag(pf_dag>0)=0;
-pf_nacht(pf_dag>0)=0;
+pf_nacht(pf_nacht>0)=0;
 
 cons_dag = -sum(sum(pf_dag));
 cons_nacht = -sum(sum(pf_nacht));
