@@ -13,7 +13,7 @@ if exist('solar_name') == 0
         load(fullfile(pwd, "Data\Solar module data\",solar_name(i)));
     end
 end
-solar_panel = JA_SOLAR;
+solar_panel = sunpower_maxeon_3;
 
 % load in inverters into workspace
 if exist('inverter_names') == 0
@@ -43,9 +43,9 @@ end
 % load = load_15m{:,2};
 
 % USEFULL DECLARATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 roof_width = 12.37; % updaten met merijn
 roof_height = 4.42; %schuine hoogte van dak
+
 roof_angle = 30; %only used for gable roof 
 %surface_area = roof_area; %oppervlakte aan zonnepanelen, kan later nog variabel worden miss?
 
@@ -106,7 +106,7 @@ if roof == 1 && orientation == 1 && fill == 1
     roof_area = roof_width*2*roof_height*cos(roof_angle*pi/180);
     nb_panels = floor(roof_area/solar_panel.area);
     inv = Fronius_Symo;
-    while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+    while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage % misschien kunnen we nog invoeren dat er meerdere strings kunnen zijn
         disp('The voltage is too high.');
         nb_panels = nb_panels-1;
     end
@@ -247,32 +247,39 @@ end
 %momenteel al hierboven berekend
 
 %% POWER FLOW CALCULATION
-
-[pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, Solar_Edge_3 ); 
-
+if bat == 2
+    [gen_pf,pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, inv); 
+end
 %% BATTERY FLOW
-battery_capacity = 13.5; %in kwh
+if bat == 1
+    battery_capacity = 13.5; %in kwh
 
-[pf_bat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,Solar_Edge_3, irr,load, surface_area, battery_capacity, 0.97);
+    [pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, battery_capacity, 0.97);
 
-%% create plots
-plot_len = 35040;
-figure
-subplot(2,2,1)
-plot(pf_bat(1:plot_len*15));
-title('pf bat')
-subplot(2,2,2)
-plot(battery_charge(1:plot_len*15));
-title('battery charge')
-subplot(2,2,3)
-plot(irr(1:plot_len*15));
-title('irr')
-subplot(2,2,4)
-plot(load(1:plot_len));
-title('load')
+    % create plots
+    plot_len = 35040;
+    figure
+    subplot(2,2,1)
+    plot(pf_bat(1:plot_len*15));
+    title('pf bat')
+    subplot(2,2,2)
+    plot(battery_charge(1:plot_len*15));
+    title('battery charge')
+    subplot(2,2,3)
+    plot(irr(1:plot_len*15));
+    title('irr')
+    subplot(2,2,4)
+    plot(load(1:plot_len));
+    title('load')
+end
 %% ELECTRICITY COST CALCULATION
-[cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
-[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nbpanels);
+if bat == 1
+    [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf_bat);
+else
+    [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
+end
+
+[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels);
 
 
 disp('Calculations done.');
