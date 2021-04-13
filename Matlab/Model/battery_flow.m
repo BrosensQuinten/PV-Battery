@@ -28,13 +28,13 @@ for i=1:12
     
     while j == 0
 
-        pf(index,1) = (40*gen(index,1) - load(counter+1,1)); %/60 to convert from kwmin to kwh
-        gen_pf(index,1)=40*gen(index,1);
+        pf(index,1) = (gen(index,1) - load(counter+1,1)); %/60 to convert from kwmin to kwh
+        gen_pf(index,1)= gen(index,1);
         pf_kwh(index,1) = pf(index,1)/60;
         
         if pf_kwh(index,1) > 0
-            if pf(index,1) > inverter.rated_power*40
-                pf(index,1) = inverter.rated_power*40;
+            if pf(index,1) > inverter.rated_power
+                pf(index,1) = inverter.rated_power;
                 pf_kwh(index,1) = pf(index,1)/60;
             end
             if pf_kwh(index, 1) + battery_charge(index, 1) < battery_capacity
