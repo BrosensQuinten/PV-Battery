@@ -1,5 +1,9 @@
-function [pf,injectie,consumptie, battery_charge] = battery_flow(Efficiency,inverter, irr,load, surface_area, battery_efficiency)
+function [pf,injectie,consumptie, battery_charge] = battery_flow(Efficiency,inverter, irr,load, surface_area,battery)
 %load in KW, battery charge in kwh
+
+
+battery_efficiency = battery.round_trip_efficiency;
+battery_capacity = battery.usable_energy;
 
 month_indices = [1 44641 84961 129541 172741 217381 260581 305221 349861 393061 437761 480961 525601];
 
@@ -29,6 +33,7 @@ for i=1:12
         if pf(index,1) > 0
             if pf(index, 1) + battery_charge(index, 1) < battery_capacity
                 battery_charge(index+1,1) = battery_charge(index,1) + battery_efficiency*pf(index,1);
+                
                 pf(index,1) = 0;
             else
                 pf(index,1) = pf(index,1) + (battery_charge(index,1) - battery_capacity)/battery_efficiency;
