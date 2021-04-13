@@ -16,6 +16,7 @@ end
 solar_panel = sunpower_maxeon_3;
 
 battery = Tesla_powerwall;
+disc_rate = 0.055;
 
 % load in inverters into workspace
 if exist('inverter_names') == 0
@@ -116,7 +117,7 @@ end
         
 %% OPTIMIZATION PROBLEM
 %%%%%%%%%%% Calculate total received power (total irradiance) %%%%%%%%%
-final_cost = 10^9;
+final_NPV = 0;
 for roof_area=2:2:max_area
 
     %%
@@ -131,7 +132,7 @@ for roof_area=2:2:max_area
         nb_panels = floor(roof_area/solar_panel.area);
         inv = Fronius_Symo;
         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage % misschien kunnen we nog invoeren dat er meerdere strings kunnen zijn
-           
+           disp("voltage too high")
             nb_panels = nb_panels-1;
         end
         surface_area = nb_panels*solar_panel.area;
@@ -293,9 +294,9 @@ for roof_area=2:2:max_area
     end
 
     [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels,battery,bat);
-
-     if total_cost < final_cost
-            final_cost = total_cost;
+     NPV = Net_present_value(disc_rate,capex,opex,ref_opex,solar_panel, inv, battery,bat);
+     if NPV > final_NPV
+            final_NPV = NPV;
             final_capex = capex;
             final_opex = opex;
             final_roof_area = roof_area;
@@ -501,7 +502,7 @@ end
 [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels,battery,bat);
 %% Payback Time and NPV
 payback_time = Payback_time(capex,opex,ref_opex,solar_panel, inv,battery,bat);
-disc_rate = 0.01;
+
 NPV = Net_present_value(disc_rate,capex,opex,ref_opex,solar_panel, inv, battery,bat);
 disp('Calculations done.');
 

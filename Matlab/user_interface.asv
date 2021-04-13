@@ -15,6 +15,8 @@ if exist('solar_name') == 0
 end
 solar_panel = sunpower_maxeon_3;
 
+battery = Tesla_powerwall;
+
 % load in inverters into workspace
 if exist('inverter_names') == 0
     inverter_names = ["Solar_Edge_4.mat", "Solar_Edge_3.mat", "Fronius_Symo.mat"];
@@ -114,7 +116,7 @@ end
         
 %% OPTIMIZATION PROBLEM
 %%%%%%%%%%% Calculate total received power (total irradiance) %%%%%%%%%
-final_cost = 10^9;
+final_NPV = 0;
 for roof_area=2:2:max_area
 
     %%
@@ -123,13 +125,13 @@ for roof_area=2:2:max_area
 
 
     if roof == 1 && orientation == 1 && fill == 1
-        disp('The most optimal angle is 43 degrees. Angle_Optimization.m');
+        
         angle = 43;
 
         nb_panels = floor(roof_area/solar_panel.area);
         inv = Fronius_Symo;
         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage % misschien kunnen we nog invoeren dat er meerdere strings kunnen zijn
-            disp('The voltage is too high.');
+           
             nb_panels = nb_panels-1;
         end
         surface_area = nb_panels*solar_panel.area;
@@ -159,7 +161,7 @@ for roof_area=2:2:max_area
 %         end
 
     elseif roof == 1 && orientation == 2 && fill == 1
-        disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
+       
         angle = 35;
         inv = Fronius_Symo;
         
@@ -168,7 +170,7 @@ for roof_area=2:2:max_area
         [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
         nb_panels = floor(roof_area/solar_panel.area);
         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-            disp('The voltage is too high.');
+            
             nb_panels = nb_panels-1;
         end
         surface_area = nb_panels*solar_panel.area;
@@ -203,7 +205,7 @@ for roof_area=2:2:max_area
 
          nb_panels = floor(roof_area/solar_panel.area);
         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-            disp('The voltage is too high.');
+            
             nb_panels = nb_panels-1;
         end
         surface_area = nb_panels*solar_panel.area;
@@ -236,7 +238,7 @@ for roof_area=2:2:max_area
         
         nb_panels = floor(roof_area/solar_panel.area);
         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-            disp('The voltage is too high.');
+           
             nb_panels = nb_panels-1;
         end
         surface_area = nb_panels*solar_panel.area;
@@ -270,7 +272,7 @@ for roof_area=2:2:max_area
     %% Reference Cost
     [ref_gen_pf,ref_pf,ref_injectie,ref_consumptie]=Power_Flow(eff,irr,load,0,inv);
     [ref_cons_dag, ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht] = dag_nacht(ref_pf);
-    [ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels);
+    [ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
 
     %% POWER FLOW CALCULATION
     if bat == 2
@@ -290,10 +292,10 @@ for roof_area=2:2:max_area
         [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
     end
 
-    [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels);
-
-     if total_cost < final_cost
-            final_cost = total_cost;
+    [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels,battery,bat);
+     NPV = Net_present_value(disc_rate,capex,opex,ref_opex,solar_panel, inv, battery,bat);
+     if NPV > final_NPV
+            final_NPV = NPV;
             final_capex = capex;
             final_opex = opex;
             final_roof_area = roof_area;
@@ -305,7 +307,7 @@ end
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
 roof_area = final_roof_area;
 disp('The final roof area is');
-disp(
+disp(roof_area);
  %%
     %%%%%%%%%%% Calculate total received power (total irradiance) %%%%%%%%%
 
@@ -456,20 +458,21 @@ end
 %%
 %%%% efficiency calculation solar panel (needed for power flow) %%%%%
 %momenteel al hierboven berekend
+battery = Tesla_powerwall;
 %% Reference Cost
 [ref_gen_pf,ref_pf,ref_injectie,ref_consumptie]=Power_Flow(eff,irr,load,0,inv);
 [ref_cons_dag, ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht] = dag_nacht(ref_pf);
-[ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels);
+[ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
 
 %% POWER FLOW CALCULATION
 if bat == 2
     [gen_pf,pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, inv); 
 end
 %% BATTERY FLOW
-if bat == 1
-    %battery = Tesla_powerwall; %select battery
 
-    [gen_pf, pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, Tesla_powerwall);
+if bat == 1
+    
+    [gen_pf, pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, battery);
 
 
 %% create plots
@@ -495,9 +498,11 @@ else
     [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
 end
 
-[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels);
-
-
+[total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels,battery,bat);
+%% Payback Time and NPV
+payback_time = Payback_time(capex,opex,ref_opex,solar_panel, inv,battery,bat);
+disc_rate = 0.055;
+NPV = Net_present_value(disc_rate,capex,opex,ref_opex,solar_panel, inv, battery,bat);
 disp('Calculations done.');
 
 
