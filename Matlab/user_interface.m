@@ -23,8 +23,13 @@ if exist('inverter_names') == 0
     end
 end % two cases: directly from solar panel to the grid or from battery to grid
 
-DC_converter = ''; % used for battery
-battery = '';
+% load in batteries into workspace
+if exist('battery_names') == 0
+    battery_names = ["Tesla_powerwall.mat", "LG_RESU10.mat"];
+    for i = 1:size(battery_names, 2) 
+        load(fullfile(pwd, "Data\Batteries\",battery_names(i)));
+    end
+end
 %additional safety equipment?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -256,12 +261,13 @@ if bat == 2
 end
 %% BATTERY FLOW
 if bat == 1
-    battery_capacity = 13.5; %in kwh
+    %battery = Tesla_powerwall; %select battery
 
-    [pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, battery_capacity, 0.97);
+    [gen_pf, pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, Tesla_powerwall);
 
-    % create plots
-    plot_len = 35040;
+    
+%% create plots
+    plot_len = 10000;
     figure
     subplot(2,2,1)
     plot(pf_bat(1:plot_len*15));
