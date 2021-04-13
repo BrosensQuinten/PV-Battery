@@ -479,16 +479,19 @@ if bat == 1
 %% create plots
     plot_len = 10000;
     figure
-    subplot(2,2,1)
+    subplot(3,2,1)
     plot(pf_bat(1:plot_len*15));
     title('pf bat')
-    subplot(2,2,2)
+    subplot(3,2,2)
     plot(battery_charge(1:plot_len*15));
     title('battery charge')
-    subplot(2,2,3)
+    subplot(3,2,3)
     plot(irr(1:plot_len*15));
-    title('irr')
-    subplot(2,2,4)
+    title('irradiance')
+    subplot(3,2,4)
+    plot(gen_pf(1:plot_len*15));
+    title('solar power')
+    subplot(3,2,5)
     plot(load(1:plot_len));
     title('load')
 end

@@ -13,3 +13,8 @@ eff = 0.17;
 
 power_diff_15m = eff*irr_15m/1000 - load_15m.Load_kW; %positive = power into grid, negative = power drawn from grid
 
+%%
+figure
+subplot(1,2,1)
+plot(irr(
+subplot(1,2,2)
