@@ -17,8 +17,8 @@ end
 for i = 1:52
     pf_dag(:,6+(i-1)*7) = 0;
     pf_dag(:,7+(i-1)*7) = 0;
-    pf_nacht(:,6+(i-1)*7) = reshaped_pf(:,6+(i-1)*7);
-    pf_nacht(:,7+(i-1)*7) = reshaped_pf(:,7+(i-1)*7);
+    pf_nacht(:,6+(i-1)*7) = reshaped_pf(:,6+(i-1)*7)/60;
+    pf_nacht(:,7+(i-1)*7) = reshaped_pf(:,7+(i-1)*7)/60;
 end
 % cons_list_dag = zeros(365,1);
 % cons_list_nacht = zeros(365,1);
