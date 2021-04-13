@@ -290,7 +290,7 @@ for roof_area=2:2:max_area
         [cons_dag, cons_nacht, net_cons_dag, net_cons_nacht] = dag_nacht(pf);
     end
 
-    [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels);
+    [total_cost,capex,opex] = Tariffs(tariff,solar_panel,inv,cons_dag,cons_nacht, net_cons_dag, net_cons_nacht, nb_panels,battery,bat);
 
      if total_cost < final_cost
             final_cost = total_cost;
