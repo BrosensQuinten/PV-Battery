@@ -15,6 +15,8 @@ if exist('solar_name') == 0
 end
 solar_panel = sunpower_maxeon_3;
 
+battery = Tesla_powerwall;
+
 % load in inverters into workspace
 if exist('inverter_names') == 0
     inverter_names = ["Solar_Edge_4.mat", "Solar_Edge_3.mat", "Fronius_Symo.mat"];
@@ -467,10 +469,9 @@ if bat == 2
     [gen_pf,pf,injectie,consumptie]= Power_Flow(eff,irr, load, surface_area, inv); 
 end
 %% BATTERY FLOW
-battery = Tesla_powerwall;
-if bat == 1
-    battery = Tesla_powerwall; %select battery
 
+if bat == 1
+    
     [gen_pf, pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, battery);
 
 
