@@ -123,13 +123,13 @@ for roof_area=2:2:max_area
 
 
     if roof == 1 && orientation == 1 && fill == 1
-        
+        disp('The most optimal angle is 43 degrees. Angle_Optimization.m');
         angle = 43;
 
         nb_panels = floor(roof_area/solar_panel.area);
         inv = Fronius_Symo;
         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage % misschien kunnen we nog invoeren dat er meerdere strings kunnen zijn
-           
+            disp('The voltage is too high.');
             nb_panels = nb_panels-1;
         end
         surface_area = nb_panels*solar_panel.area;
@@ -159,7 +159,7 @@ for roof_area=2:2:max_area
 %         end
 
     elseif roof == 1 && orientation == 2 && fill == 1
-       
+        disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
         angle = 35;
         inv = Fronius_Symo;
         
@@ -168,7 +168,7 @@ for roof_area=2:2:max_area
         [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
         nb_panels = floor(roof_area/solar_panel.area);
         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-            
+            disp('The voltage is too high.');
             nb_panels = nb_panels-1;
         end
         surface_area = nb_panels*solar_panel.area;
@@ -203,7 +203,7 @@ for roof_area=2:2:max_area
 
          nb_panels = floor(roof_area/solar_panel.area);
         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-            
+            disp('The voltage is too high.');
             nb_panels = nb_panels-1;
         end
         surface_area = nb_panels*solar_panel.area;
@@ -236,7 +236,7 @@ for roof_area=2:2:max_area
         
         nb_panels = floor(roof_area/solar_panel.area);
         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-           
+            disp('The voltage is too high.');
             nb_panels = nb_panels-1;
         end
         surface_area = nb_panels*solar_panel.area;
@@ -305,7 +305,7 @@ end
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
 roof_area = final_roof_area;
 disp('The final roof area is');
-disp(roof_area);
+disp(
  %%
     %%%%%%%%%%% Calculate total received power (total irradiance) %%%%%%%%%
 
