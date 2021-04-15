@@ -53,8 +53,8 @@ end
 % USEFULL DECLARATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 roof_width = 12.37; % updaten met merijn
 roof_height = 4.42; %schuine hoogte van dak
-
-roof_angle = 30; %only used for gable roof 
+roof_angle = 45; %mijn dak is 45 graden aan de ene kant en 24 aan de andere 
+voltage_too_high = 0; 
 %surface_area = roof_area; %oppervlakte aan zonnepanelen, kan later nog variabel worden miss?
 
 
@@ -117,8 +117,19 @@ end
         
 %% OPTIMIZATION PROBLEM
 %%%%%%%%%%% Calculate total received power (total irradiance) %%%%%%%%%
-final_NPV = 0;
-for roof_area=2:2:max_area
+
+final_NPV = -10^9;
+max_NPV = -10^9;
+definitive_NPV = -10^9;
+solar_modules = [sunpower_maxeon_3, Panasonic, LG_Neon_5, JA_SOLAR, Canadian_solar];
+invertor_list = [Fronius_Symo, Solar_Edge_3, Solar_Edge_4];
+for invertor_index = 1:3
+    inv = invertor_list(invertor_index);
+for solar_index = 1:5
+    solar_panel = solar_modules(solar_index);
+    nb_panels = 1;
+    max_panels = floor(2*inv.input_DC_voltage/solar_panel.nominal_voltage);
+while nb_panels < max_panels+1
 
     %%
     %%%%%%%%%%% Calculate total received power (total irradiance) %%%%%%%%%
@@ -129,12 +140,8 @@ for roof_area=2:2:max_area
         
         angle = 43;
 
-        nb_panels = floor(roof_area/solar_panel.area);
-        inv = Fronius_Symo;
-        while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage % misschien kunnen we nog invoeren dat er meerdere strings kunnen zijn
-           disp("voltage too high")
-            nb_panels = nb_panels-1;
-        end
+        %nb_panels = floor(roof_area/solar_panel.area);
+     
         surface_area = nb_panels*solar_panel.area;
         irr = south_face(angle,ray);
         [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -164,16 +171,15 @@ for roof_area=2:2:max_area
     elseif roof == 1 && orientation == 2 && fill == 1
        
         angle = 35;
-        inv = Fronius_Symo;
+        %inv = Fronius_Symo;
         
         irr = east_west(angle,ray);
         [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
         [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
-        nb_panels = floor(roof_area/solar_panel.area);
-        while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-            
-            nb_panels = nb_panels-1;
-        end
+        %nb_panels = floor(roof_area/solar_panel.area);
+        %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+         %   nb_panels = nb_panels-1;
+        %end
         surface_area = nb_panels*solar_panel.area;
 %     elseif roof == 1 && orientation == 2 && fill == 2
 %         disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
@@ -200,15 +206,14 @@ for roof_area=2:2:max_area
 
     elseif roof == 2 && orientation == 1 && fill ==1
         irr = south_face(roof_angle,ray);
-        inv = Fronius_Symo;
+        %inv = Fronius_Symo;
         [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
         [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
 
-         nb_panels = floor(roof_area/solar_panel.area);
-        while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-            
-            nb_panels = nb_panels-1;
-        end
+        % nb_panels = floor(roof_area/solar_panel.area);
+        %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+         %   nb_panels = nb_panels-1;
+        %end
         surface_area = nb_panels*solar_panel.area;
 %     elseif roof == 2 && orientation == 1 && fill ==2
 %         irr = south_face(roof_angle,ray);
@@ -233,15 +238,15 @@ for roof_area=2:2:max_area
 
     elseif roof == 2 && orientation == 2 && fill ==1
         irr = east_west(roof_angle,ray);
-        inv = Fronius_Symo;
+        %inv = Fronius_Symo;
         [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
         [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
         
-        nb_panels = floor(roof_area/solar_panel.area);
-        while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+       % nb_panels = floor(roof_area/solar_panel.area);
+        %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
            
-            nb_panels = nb_panels-1;
-        end
+         %   nb_panels = nb_panels-1;
+       % end
         surface_area = nb_panels*solar_panel.area;
 %     else
 %         irr = east_west(roof_angle,ray);
@@ -299,16 +304,42 @@ for roof_area=2:2:max_area
             final_NPV = NPV;
             final_capex = capex;
             final_opex = opex;
-            final_roof_area = roof_area;
+            final_nb_panels = nb_panels;
      end
 
-
+nb_panels = nb_panels+1;
+roof_area = nb_panels*solar_panel.area;
+if roof_area>max_area
+    break
 end
-
+end
+if  final_NPV > max_NPV
+    max_NPV = final_NPV;
+    max_capex = final_capex;
+    max_opex = final_opex;
+    max_nb_panels = final_nb_panels;
+    max_solar_panel = solar_panel;  
+end
+end
+if max_NPV > definitive_NPV
+    definitive_NPV = max_NPV;
+    definitive_capex = max_capex;
+    definitive_opex = max_opex;
+    definitive_nb_panels = max_nb_panels;
+    definitive_solar_panel = max_solar_panel;
+    definitive_inv = inv;
+end
+end
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
-roof_area = final_roof_area;
+nb_panels = definitive_nb_panels;
+solar_panel = definitive_solar_panel;
+inv = definitive_inv;
 disp('The final roof area is');
 disp(roof_area);
+disp('The best solar panel is');
+disp(solar_panel);
+disp('The used converter is');
+disp(inv);
  %%
     %%%%%%%%%%% Calculate total received power (total irradiance) %%%%%%%%%
 
@@ -318,12 +349,12 @@ if roof == 1 && orientation == 1 && fill == 1
     disp('The most optimal angle is 43 degrees. Angle_Optimization.m');
     angle = 43;
 
-    nb_panels = floor(roof_area/solar_panel.area);
-    inv = Fronius_Symo;
-    while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage % misschien kunnen we nog invoeren dat er meerdere strings kunnen zijn
-        disp('The voltage is too high.');
-        nb_panels = nb_panels-1;
-    end
+    %nb_panels = floor(roof_area/solar_panel.area);
+    %inv = Fronius_Symo;
+    %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage % misschien kunnen we nog invoeren dat er meerdere strings kunnen zijn
+     %   disp('The voltage is too high.');
+      %  nb_panels = nb_panels-1;
+    %end
     surface_area = nb_panels*solar_panel.area;
     irr = south_face(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -353,16 +384,16 @@ if roof == 1 && orientation == 1 && fill == 1
 elseif roof == 1 && orientation == 2 && fill == 1
     disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
     angle = 35;
-    inv = Fronius_Symo;
+    %inv = Fronius_Symo;
 
     irr = east_west(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
-    nb_panels = floor(roof_area/solar_panel.area);
-    while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-        disp('The voltage is too high.');
-        nb_panels = nb_panels-1;
-    end
+    %nb_panels = floor(roof_area/solar_panel.area);
+    %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+     %   disp('The voltage is too high.');
+     %   nb_panels = nb_panels-1;
+    %end
     surface_area = nb_panels*solar_panel.area;
 %     elseif roof == 1 && orientation == 2 && fill == 2
 %         disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
@@ -389,15 +420,14 @@ elseif roof == 1 && orientation == 2 && fill == 1
 
 elseif roof == 2 && orientation == 1 && fill ==1
     irr = south_face(roof_angle,ray);
-    inv = Fronius_Symo;
+    %inv = Fronius_Symo;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
 
-     nb_panels = floor(roof_area/solar_panel.area);
-    while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-        disp('The voltage is too high.');
-        nb_panels = nb_panels-1;
-    end
+     %nb_panels = floor(roof_area/solar_panel.area);
+    %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+     %  nb_panels = nb_panels-1;
+    %end
     surface_area = nb_panels*solar_panel.area;
 %     elseif roof == 2 && orientation == 1 && fill ==2
 %         irr = south_face(roof_angle,ray);
@@ -410,7 +440,7 @@ elseif roof == 2 && orientation == 1 && fill ==1
 %         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
 %             disp('The voltage is too high.');
 %             nb_panels = nb_panels-1;
-%             surface_area = nb_panels*solar_panel.area;
+%     /        surface_area = nb_panels*solar_panel.area;
 %         end
 %         if surface_area > roof_area
 %             surface_area = roof_area;
@@ -422,15 +452,15 @@ elseif roof == 2 && orientation == 1 && fill ==1
 
 elseif roof == 2 && orientation == 2 && fill ==1
     irr = east_west(roof_angle,ray);
-    inv = Fronius_Symo;
+    %inv = Fronius_Symo;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
 
-    nb_panels = floor(roof_area/solar_panel.area);
-    while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-        disp('The voltage is too high.');
-        nb_panels = nb_panels-1;
-    end
+    %nb_panels = floor(roof_area/solar_panel.area);
+    %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+     %   disp('The voltage is too high.');
+      %  nb_panels = nb_panels-1;
+    %end
     surface_area = nb_panels*solar_panel.area;
 %     else
 %         irr = east_west(roof_angle,ray);
