@@ -125,8 +125,8 @@ solar_modules = [sunpower_maxeon_3, Panasonic, LG_Neon_5, JA_SOLAR, Canadian_sol
 invertor_list = [Fronius_Symo, Solar_Edge_3, Solar_Edge_4];
 for invertor_index = 1:3
     inv = invertor_list(invertor_index);
-for solar_index = 1:5
-    solar_panel = solar_modules(solar_index);
+%for solar_index = 1:5
+    solar_panel = Canadian_solar;
     nb_panels = 1;
     max_panels = floor(2*inv.input_DC_voltage/solar_panel.nominal_voltage);
 while nb_panels < max_panels+1
@@ -305,6 +305,7 @@ while nb_panels < max_panels+1
             final_capex = capex;
             final_opex = opex;
             final_nb_panels = nb_panels;
+            final_inv = inv;
      end
 
 nb_panels = nb_panels+1;
@@ -312,27 +313,27 @@ roof_area = nb_panels*solar_panel.area;
 if roof_area>max_area
     break
 end
+%end
+%if  final_NPV > max_NPV
+    %max_NPV = final_NPV;
+    %max_capex = final_capex;
+    %max_opex = final_opex;
+   % max_nb_panels = final_nb_panels;
+  %  max_solar_panel = solar_panel;  
+%end
 end
-if  final_NPV > max_NPV
-    max_NPV = final_NPV;
-    max_capex = final_capex;
-    max_opex = final_opex;
-    max_nb_panels = final_nb_panels;
-    max_solar_panel = solar_panel;  
-end
-end
-if max_NPV > definitive_NPV
-    definitive_NPV = max_NPV;
-    definitive_capex = max_capex;
-    definitive_opex = max_opex;
-    definitive_nb_panels = max_nb_panels;
-    definitive_solar_panel = max_solar_panel;
-    definitive_inv = inv;
+if final_NPV > definitive_NPV
+    definitive_NPV = final_NPV;
+    definitive_capex = final_capex;
+    definitive_opex = final_opex;
+    definitive_nb_panels = final_nb_panels;
+    definitive_solar_panel = solar_panel;
+    definitive_inv = final_inv;
 end
 end
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
 nb_panels = definitive_nb_panels;
-solar_panel = definitive_solar_panel;
+%solar_panel = definitive_solar_panel;
 inv = definitive_inv;
 disp('The final roof area is');
 disp(roof_area);
@@ -502,7 +503,7 @@ end
 %% BATTERY FLOW
 
 if bat == 1
-    
+   
     [gen_pf, pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, battery);
 
 
