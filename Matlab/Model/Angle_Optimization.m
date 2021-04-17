@@ -12,8 +12,8 @@ highest_energy_S = 0;
 highest_energy_WE = 0;
 
 for i=1:60
-irr_S = south_face(angle,1,ray);
-irr_WE = east_west(angle,1,ray);
+irr_S = south_face(angle,ray);
+irr_WE = east_west(angle,ray);
 
 int_S = sum(irr_S, 'all'); int_WE = sum(irr_WE, 'all');
 
