@@ -32,3 +32,51 @@ ylabel('Load per quarter in kW')
 subplot(1,2,2)
 plot(date_time_quarter(1:loadlen),load(1:loadlen));
 ylabel('Load per quarter in kW')
+
+
+%% load every min
+loadtemp = load;
+loadtemp(:,2:15) = 0;
+for i = 1: size(load,1)
+    loadtemp(i,2:15) = load(i);
+end
+loadMinute = zeros(1, 52560);
+
+for i = 1: size(loadtemp,1)
+    for j = 1:size(loadtemp,2)
+        loadMinute(j+15*(i-1)) = loadtemp(i,j);
+    end
+end
+%% create plots power flow
+    plot_len3 = size(date_time,1);
+    figure
+    subplot(2,2,1)
+    plot(date_time(1:plot_len3),gen_pf(1:plot_len3));
+    ylabel('PV power [kW]')
+    subplot(2,2,2)
+    plot(date_time(1:plot_len3),pf(1:plot_len3));
+    ylabel('Power flow [kW]  ')
+    subplot(2,2,3)
+    plot(date_time(1:plot_len3),irr(1:plot_len3));
+    ylabel('irradiance profile [w/m^2]')
+    subplot(2,2,4)
+    plot(date_time(1:plot_len3),loadMinute(1:plot_len3));
+    ylabel('Load profile [kW]')
+    
+%% battery flow
+%% create plots power flow
+    plot_len4 = 410000;%%size(date_time,1);
+    plotstart = 400000
+    figure
+    subplot(2,2,1)
+    plot(date_time(plotstart:plot_len4),gen_pf(plotstart:plot_len4));
+    ylabel('PV power [kW]')
+    subplot(2,2,2)
+    plot(date_time(plotstart:plot_len4),pf_bat(plotstart:plot_len4));
+    ylabel('power flow [kW]  ')
+    subplot(2,2,3)
+    plot(date_time(plotstart:plot_len4),loadMinute(plotstart:plot_len4));
+    ylabel('load [kW]')
+    subplot(2,2,4)
+    plot(date_time(plotstart:plot_len4),battery_charge(plotstart:plot_len4));
+    ylabel('battery charge [kWh]')

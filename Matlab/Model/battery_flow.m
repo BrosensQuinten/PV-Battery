@@ -35,6 +35,7 @@ for i=1:12
         if pf_kwh(index,1) > 0
             if pf(index,1) > inverter.rated_power
                 pf(index,1) = inverter.rated_power;
+                pf_kwh(index,1) = pf(index,1)/60;
             end
             if pf_kwh(index, 1) + battery_charge(index, 1) < battery_capacity
                 battery_charge(index+1,1) = battery_charge(index,1) + battery_efficiency*pf_kwh(index,1);

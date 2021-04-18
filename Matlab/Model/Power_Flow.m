@@ -29,7 +29,7 @@ for i=1:12
             if pf(index,1) < invertor.rated_power
                 injectie = injectie + pf(index,1)/60; 
             else
-                injectie = invertor.rated_power/60;
+                injectie = injectie+invertor.rated_power/60;
                 pf(index,1) = invertor.rated_power;
             end
         else 
