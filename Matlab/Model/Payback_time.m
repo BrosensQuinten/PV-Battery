@@ -11,7 +11,7 @@ if t > solar_panel.lifetime || t>invertor.lifetime
     disp("lifetime exceeded");
    return
 elseif bat == 1
-    if t > battery.lifetime
+    if t > battery.lifetime %battery lifetime is dominant?
         disp("lifetime exceeded");
         return
     end
