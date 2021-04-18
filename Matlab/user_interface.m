@@ -125,11 +125,15 @@ solar_modules = [sunpower_maxeon_3, Panasonic, LG_Neon_5, JA_SOLAR, Canadian_sol
 invertor_list = [Fronius_Symo, Solar_Edge_3, Solar_Edge_4];
 for invertor_index = 1:3
     inv = invertor_list(invertor_index);
-for solar_index = 1:5
-    solar_panel = solar_modules(solar_index);
-%     solar_panel = Canadian_solar;
+% for solar_index = 1:5 
+%   solar_panel = solar_modules(solar_index);
+    solar_panel = Canadian_solar;
     nb_panels = 1;
+%     if orientation == 1
     max_panels = floor(2*inv.input_DC_voltage/solar_panel.nominal_voltage);
+%     else
+%         max_panels = max_panels *2;
+%     end
 while nb_panels < max_panels+1
 
     %%
@@ -139,7 +143,7 @@ while nb_panels < max_panels+1
 
     if roof == 1 && orientation == 1 && fill == 1
         
-        angle = 43;
+        angle = 40;
 
         %nb_panels = floor(roof_area/solar_panel.area);
      
@@ -171,7 +175,7 @@ while nb_panels < max_panels+1
 
     elseif roof == 1 && orientation == 2 && fill == 1
        
-        angle = 35;
+        angle = 29;
         %inv = Fronius_Symo;
         
         irr = east_west(angle,ray);
