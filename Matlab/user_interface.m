@@ -123,6 +123,7 @@ best_NPV = -10^9;
 definitive_NPV = -10^9;
 solar_modules = [sunpower_maxeon_3, Panasonic, LG_Neon_5, JA_SOLAR, Canadian_solar];
 invertor_list = [Fronius_Symo, Solar_Edge_3];
+for angle = 30:60
 for invertor_index = 1:2
    inv = invertor_list(invertor_index);
  %for angle = 30:50
@@ -143,7 +144,7 @@ while nb_panels < max_panels+1
 
     if roof == 1 && orientation == 1 
         
-        angle = 45;
+        %angle = 45;
 
         %nb_panels = floor(roof_area/solar_panel.area);
      
@@ -155,7 +156,7 @@ while nb_panels < max_panels+1
 
     elseif roof == 1 && orientation == 2 
        
-        angle = 29;
+        %angle = 29;
         %inv = Fronius_Symo;
         
         irr = east_west(angle,ray);
@@ -246,30 +247,30 @@ if final_NPV > definitive_NPV
     definitive_inv = final_inv;
 end
  end
-%if definitive_NPV > best_NPV
- %   best_NPV = definitive_NPV;
-  %  best_capex = definitive_capex;
-   % best_opex = definitive_opex;
-    %best_nb_panels = definitive_nb_panels;
-    %best_solar_panel = definitive_solar_panel;
-    %best_inv = definitive_inv;
-    %if roof == 1
-     %   if orientation == 1
-     %       best_angle_south = angle;
-     %   else
-      %      best_angle_ew = angle;
-       % end
-    %end
-
-
+if definitive_NPV > best_NPV
+    best_NPV = definitive_NPV;
+    best_capex = definitive_capex;
+    best_opex = definitive_opex;
+    best_nb_panels = definitive_nb_panels;
+    best_solar_panel = definitive_solar_panel;
+    best_inv = definitive_inv;
+    if roof == 1
+        if orientation == 1
+            best_angle_south = angle;
+        else
+            best_angle_ew = angle;
+        end
+    end
+end
+end
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
-nb_panels = definitive_nb_panels;
+nb_panels = best_nb_panels;
 %solar_panel = definitive_solar_panel;
-inv = definitive_inv;
+inv = best_inv;
 disp('The final roof area is');
 disp(roof_area);
 disp('The best solar panel is');
-solar_panel = definitive_solar_panel;
+solar_panel = best_solar_panel;
 disp(solar_panel);
 disp('The used converter is');
 disp(inv);
