@@ -125,7 +125,7 @@ solar_modules = [sunpower_maxeon_3, Panasonic, LG_Neon_5, JA_SOLAR, Canadian_sol
 invertor_list = [Fronius_Symo, Solar_Edge_3];
 for invertor_index = 1:2
    inv = invertor_list(invertor_index);
- %for angle = 30:50
+ 
 %   solar_panel = solar_modules(solar_index);
     solar_panel = Canadian_solar;
     nb_panels = 1;
@@ -135,15 +135,18 @@ for invertor_index = 1:2
 %         max_panels = max_panels *2;
 %     end
 while nb_panels < max_panels+1
-
-    %%
+for angle = 30:50
+    if roof == 2
+        break
+    end
+    
     %%%%%%%%%%% Calculate total received power (total irradiance) %%%%%%%%%
 
 
 
     if roof == 1 && orientation == 1 
         
-        angle = 45;
+        %angle = 40;
 
         %nb_panels = floor(roof_area/solar_panel.area);
      
@@ -155,7 +158,7 @@ while nb_panels < max_panels+1
 
     elseif roof == 1 && orientation == 2 
        
-        angle = 29;
+        %angle = 29;
         %inv = Fronius_Symo;
         
         irr = east_west(angle,ray);
@@ -186,9 +189,32 @@ while nb_panels < max_panels+1
         %inv = Fronius_Symo;
         [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
         [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
-
+        
+       % nb_panels = floor(roof_area/solar_panel.area);
+        %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+           
+         %   nb_panels = nb_panels-1;
+       % end
         surface_area = nb_panels*solar_panel.area;
-
+%     else
+%         irr = east_west(roof_angle,ray);
+%         inv = Solar_Edge_3;
+%         [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
+%         [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
+%         roof_area = 2*roof_width*roof_height; %is dit oke?
+%         surface_area = minimum_area(eff,irr,load,solar_panel);
+%         nb_panels = floor(surface_area/solar_panel.area);
+%         while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+%             disp('The voltage is too high.');
+%             nb_panels = nb_panels-1;
+%             surface_area = nb_panels*solar_panel.area;
+%         end    
+%         if surface_area > roof_area
+%             surface_area = roof_area;
+%             disp('The entire roof is used.')
+%         end
+%         disp('The used roof area is ');
+%         disp(surface_area);
     end
 
 
@@ -246,26 +272,24 @@ if final_NPV > definitive_NPV
     definitive_inv = final_inv;
 end
  end
-%if definitive_NPV > best_NPV
- %   best_NPV = definitive_NPV;
-  %  best_capex = definitive_capex;
-   % best_opex = definitive_opex;
-    %best_nb_panels = definitive_nb_panels;
-    %best_solar_panel = definitive_solar_panel;
-    %best_inv = definitive_inv;
-    %if roof == 1
-     %   if orientation == 1
-     %       best_angle_south = angle;
-     %   else
-      %      best_angle_ew = angle;
-       % end
-    %end
-
-
+if definitive_NPV > best_NPV
+    best_NPV = definitive_NPV;
+    best_capex = definitive_capex;
+    best_opex = definitive_opex;
+    best_nb_panels = definitive_nb_panels;
+    best_solar_panel = definitive_solar_panel;
+    best_inv = definitive_inv;
+    if orientation == 1
+        best_angle_south = angle;
+    else
+        best_angle_ew = angle;
+    end
+end
+end
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
 nb_panels = definitive_nb_panels;
 %solar_panel = definitive_solar_panel;
-inv = definitive_inv;
+inv = best_inv;
 disp('The final roof area is');
 disp(roof_area);
 disp('The best solar panel is');
@@ -274,6 +298,11 @@ disp(solar_panel);
 disp('The used converter is');
 disp(inv);
 
+if orientation == 1
+   angle = best_angle_south;
+else
+    angle = best_angle_ew;
+end
  %%
     %%%%%%%%%%% Calculate total received power (total irradiance) %%%%%%%%%
 
@@ -281,7 +310,14 @@ disp(inv);
 
 if roof == 1 && orientation == 1 
     disp('The most optimal angle is 40 degrees. Angle_Optimization.m');
-    angle = 45;
+    %angle = 40;
+
+    %nb_panels = floor(roof_area/solar_panel.area);
+    %inv = Fronius_Symo;
+    %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage % misschien kunnen we nog invoeren dat er meerdere strings kunnen zijn
+     %   disp('The voltage is too high.');
+      %  nb_panels = nb_panels-1;
+    %end
     surface_area = nb_panels*solar_panel.area;
     irr = south_face(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -289,27 +325,44 @@ if roof == 1 && orientation == 1
 
 elseif roof == 1 && orientation == 2 
     disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
-    angle = 29;
+    %angle = 29;
  
 
     irr = east_west(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
+    %nb_panels = floor(roof_area/solar_panel.area);
+    %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+     %   disp('The voltage is too high.');
+     %   nb_panels = nb_panels-1;
+    %end
     surface_area = nb_panels*solar_panel.area;
 
 
 elseif roof == 2 && orientation == 1 
     irr = south_face(roof_angle,ray);
+    %inv = Fronius_Symo;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
 
+     %nb_panels = floor(roof_area/solar_panel.area);
+    %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+     %  nb_panels = nb_panels-1;
+    %end
     surface_area = nb_panels*solar_panel.area;
 
 
 elseif roof == 2 && orientation == 2 
     irr = east_west(roof_angle,ray);
+    %inv = Fronius_Symo;
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
+
+    %nb_panels = floor(roof_area/solar_panel.area);
+    %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
+     %   disp('The voltage is too high.');
+      %  nb_panels = nb_panels-1;
+    %end
     surface_area = nb_panels*solar_panel.area;
 end
 
