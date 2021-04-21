@@ -5,11 +5,11 @@ capex = solar_panel.price*nb_panels + inverter.price+installation_cost(nb_panels
 if bat == 1
     capex = capex + battery.price;
 end
-if cons_dag < 0
-    cons_dag = 0;
+if net_cons_dag < 0
+    net_cons_dag = 0;
 end
-if cons_nacht <0 
-    cons_nacht = 0;
+if net_cons_nacht <0 
+    net_cons_nacht = 0;
 end
 
 %opex -> depends on tariff used (1 = prosumer/netmetering, 2 = capacity)

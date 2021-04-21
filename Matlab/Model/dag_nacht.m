@@ -31,6 +31,12 @@ end
 
 net_cons_dag = -sum(sum(pf_dag));
 net_cons_nacht = -sum(sum(pf_nacht));
+if net_cons_dag < 0
+    net_cons_dag = 0;
+end
+if net_cons_nacht <0
+    net_cons_nacht = 0;
+end
 
 %now for gross consumption tariff: not with net meter
 pf_dag(pf_dag>0)=0;
