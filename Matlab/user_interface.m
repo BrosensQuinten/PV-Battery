@@ -123,7 +123,7 @@ best_NPV = -10^9;
 definitive_NPV = -10^9;
 solar_modules = [sunpower_maxeon_3, Panasonic, LG_Neon_5, JA_SOLAR, Canadian_solar];
 invertor_list = [Fronius_Symo, Solar_Edge_3];
-for angle = 30:60
+%for angle = 25:35
 for invertor_index = 1:2
    inv = invertor_list(invertor_index);
  %for angle = 30:50
@@ -252,7 +252,7 @@ if definitive_NPV > best_NPV
     best_capex = definitive_capex;
     best_opex = definitive_opex;
     best_nb_panels = definitive_nb_panels;
-    best_solar_panel = definitive_solar_panel;
+    %best_solar_panel = definitive_solar_panel;
     best_inv = definitive_inv;
     if roof == 1
         if orientation == 1
@@ -262,7 +262,7 @@ if definitive_NPV > best_NPV
         end
     end
 end
-end
+%end
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
 nb_panels = best_nb_panels;
 %solar_panel = definitive_solar_panel;
@@ -270,8 +270,8 @@ inv = best_inv;
 disp('The final roof area is');
 disp(roof_area);
 disp('The best solar panel is');
-solar_panel = best_solar_panel;
-disp(solar_panel);
+%solar_panel = best_solar_panel;
+%disp(solar_panel);
 disp('The used converter is');
 disp(inv);
 
@@ -282,7 +282,7 @@ disp(inv);
 
 if roof == 1 && orientation == 1 
     disp('The most optimal angle is 40 degrees. Angle_Optimization.m');
-    angle = 45;
+    angle = best_angle_south;
     surface_area = nb_panels*solar_panel.area;
     irr = south_face(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -290,7 +290,7 @@ if roof == 1 && orientation == 1
 
 elseif roof == 1 && orientation == 2 
     disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
-    angle = 29;
+    angle = best_angle_ew;
  
 
     irr = east_west(angle,ray);
