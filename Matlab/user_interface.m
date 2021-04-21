@@ -123,6 +123,7 @@ best_NPV = -10^9;
 definitive_NPV = -10^9;
 solar_modules = [sunpower_maxeon_3, Panasonic, LG_Neon_5, JA_SOLAR, Canadian_solar];
 invertor_list = [Fronius_Symo, Solar_Edge_3];
+angle = 53;
 %for angle = 25:35
 for invertor_index = 1:2
    inv = invertor_list(invertor_index);

@@ -5,7 +5,12 @@ capex = solar_panel.price*nb_panels + inverter.price+installation_cost(nb_panels
 if bat == 1
     capex = capex + battery.price;
 end
-
+if cons_dag < 0
+    cons_dag = 0;
+end
+if cons_nacht <0 
+    cons_nacht = 0;
+end
 
 %opex -> depends on tariff used (1 = prosumer/netmetering, 2 = capacity)
 %don't forget, together with TSO/DSO tariff also additional costs are payed
@@ -41,6 +46,7 @@ TSO_noBTW = 0.00329; %EUR/kwh
 TSO_total = (TSO_withBTW + TSO_noBTW)*tot_con;
 
 %Average electricity cost energy supplier (4 different suppliers)
+
 ES_fixed_cost = 47.72; 
 ES_day = 0.085375 *cons_dag;
 ES_night = 0.067275 * cons_nacht;
