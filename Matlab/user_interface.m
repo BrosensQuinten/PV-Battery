@@ -329,7 +329,7 @@ if final_NPV > definitive_NPV
     definitive_inv = final_inv;
 end
 end
-end
+
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
 nb_panels = definitive_nb_panels;
 %solar_panel = definitive_solar_panel;
