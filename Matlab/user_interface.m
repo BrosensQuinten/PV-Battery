@@ -123,11 +123,11 @@ best_NPV = -10^9;
 definitive_NPV = -10^9;
 solar_modules = [sunpower_maxeon_3, Panasonic, LG_Neon_5, JA_SOLAR, Canadian_solar];
 invertor_list = [Fronius_Symo, Solar_Edge_3, Solar_Edge_4];
-angle =53;
+
 %for angle = 25:35
 for invertor_index = 1:3
    inv = invertor_list(invertor_index);
- %for angle = 30:50
+
 %   solar_panel = solar_modules(solar_index);
     solar_panel = Canadian_solar;
     nb_panels = 1;
@@ -145,9 +145,7 @@ while nb_panels < max_panels+1
 
     if roof == 1 && orientation == 1 
         
-        %angle = 45;
-
-        %nb_panels = floor(roof_area/solar_panel.area);
+        angle = 53;
      
         surface_area = nb_panels*solar_panel.area;
         irr = south_face(angle,ray);
@@ -157,39 +155,31 @@ while nb_panels < max_panels+1
 
     elseif roof == 1 && orientation == 2 
        
-        %angle = 29;
-        %inv = Fronius_Symo;
+        angle = 30;
         
+        surface_area = nb_panels*solar_panel.area;
         irr = east_west(angle,ray);
         [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
         [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
-        %nb_panels = floor(roof_area/solar_panel.area);
-        %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-         %   nb_panels = nb_panels-1;
-        %end
-        surface_area = nb_panels*solar_panel.area;
+        
 
 
     elseif roof == 2 && orientation == 1 
+        
+        surface_area = nb_panels*solar_panel.area;
         irr = south_face(roof_angle,ray);
-        %inv = Fronius_Symo;
         [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
         [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
-
-        % nb_panels = floor(roof_area/solar_panel.area);
-        %while nb_panels*solar_panel.nominal_voltage/2 > inv.input_DC_voltage
-         %   nb_panels = nb_panels-1;
-        %end
-        surface_area = nb_panels*solar_panel.area;
+  
 
 
     elseif roof == 2 && orientation == 2
+        
+        surface_area = nb_panels*solar_panel.area;
         irr = east_west(roof_angle,ray);
-        %inv = Fronius_Symo;
         [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
         [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
 
-        surface_area = nb_panels*solar_panel.area;
 
     end
 
@@ -210,10 +200,7 @@ while nb_panels < max_panels+1
     end
     %% BATTERY FLOW
     if bat == 1
-        %battery = Tesla_powerwall; %select battery
-
         [gen_pf, pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, Tesla_powerwall);
-        
     end
     %% ELECTRICITY COST CALCULATION
     if bat == 1
@@ -282,7 +269,7 @@ disp(inv);
 
 
 if roof == 1 && orientation == 1 
-    disp('The most optimal angle is 40 degrees. Angle_Optimization.m');
+    
     angle = best_angle_south;
     surface_area = nb_panels*solar_panel.area;
     irr = south_face(angle,ray);
@@ -290,22 +277,19 @@ if roof == 1 && orientation == 1
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
 
 elseif roof == 1 && orientation == 2 
-    disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
     angle = best_angle_ew;
- 
-
+    surface_area = nb_panels*solar_panel.area;
     irr = east_west(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
-    surface_area = nb_panels*solar_panel.area;
-
-
+  
 elseif roof == 2 && orientation == 1 
+    
+    surface_area = nb_panels*solar_panel.area;
     irr = south_face(roof_angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
 
-    surface_area = nb_panels*solar_panel.area;
 
 
 elseif roof == 2 && orientation == 2 
@@ -321,7 +305,7 @@ end
 %%
 %%%% efficiency calculation solar panel (needed for power flow) %%%%%
 %momenteel al hierboven berekend
-battery = Tesla_powerwall;
+
 %% Reference Cost
 [ref_gen_pf,ref_pf,ref_injectie,ref_consumptie]=Power_Flow(eff,irr,load,0,inv);
 [ref_cons_dag, ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht] = dag_nacht(ref_pf);
