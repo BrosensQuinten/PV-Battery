@@ -34,7 +34,7 @@ if exist('battery_names') == 0
 end
 %additional safety equipment?
 battery = Tesla_powerwall;
-disc_rate = 0.055;
+disc_rate = 0.02;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % RUN ONE TIME TO SAVE TIME %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -130,7 +130,7 @@ for invertor_index = 1:3
 
 
 %   solar_panel = solar_modules(solar_index);
-    solar_panel = Canadian_solar;
+%    solar_panel = Canadian_solar;
 
  for solar_index = 2:5
   solar_panel = solar_modules(solar_index);
@@ -198,7 +198,7 @@ while nb_panels < max_panels+1
     %% Reference Cost
     [ref_gen_pf,ref_pf,ref_injectie,ref_consumptie]=Power_Flow(eff,irr,load,0,inv);
     [ref_cons_dag, ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht] = dag_nacht(ref_pf);
-    [ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
+    [ref_total_cost,ref_capex,ref_opex] = Tariffs(2,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
 
     %% POWER FLOW CALCULATION
     if bat == 2
@@ -315,7 +315,7 @@ end
 %% Reference Cost
 [ref_gen_pf,ref_pf,ref_injectie,ref_consumptie]=Power_Flow(eff,irr,load,0,inv);
 [ref_cons_dag, ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht] = dag_nacht(ref_pf);
-[ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
+[ref_total_cost,ref_capex,ref_opex] = Tariffs(2,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
 
 %% POWER FLOW CALCULATION
 if bat == 2

@@ -34,7 +34,7 @@ if exist('battery_names') == 0
 end
 %additional safety equipment?
 battery = Tesla_powerwall;
-disc_rate = 0.055;
+disc_rate = 0.02;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % RUN ONE TIME TO SAVE TIME %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -128,8 +128,14 @@ invertor_list = [Fronius_Symo, Solar_Edge_3, Solar_Edge_4];
 for invertor_index = 1:3
    inv = invertor_list(invertor_index);
 
+
 %   solar_panel = solar_modules(solar_index);
     solar_panel = Canadian_solar;
+
+ for solar_index = 2:5
+  solar_panel = solar_modules(solar_index);
+   % solar_panel = Canadian_solar;
+
     nb_panels = 1;
 %     if orientation == 1
     max_panels = floor(2*inv.input_DC_voltage/solar_panel.nominal_voltage);
@@ -192,7 +198,7 @@ while nb_panels < max_panels+1
     %% Reference Cost
     [ref_gen_pf,ref_pf,ref_injectie,ref_consumptie]=Power_Flow(eff,irr,load,0,inv);
     [ref_cons_dag, ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht] = dag_nacht(ref_pf);
-    [ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
+    [ref_total_cost,ref_capex,ref_opex] = Tariffs(2,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
 
     %% POWER FLOW CALCULATION
     if bat == 2
@@ -200,9 +206,7 @@ while nb_panels < max_panels+1
     end
     %% BATTERY FLOW
     if bat == 1
-
         [gen_pf, pf_bat,pf_kwhbat,injectie_bat,consumptie_bat, battery_charge] = battery_flow(eff ,inv, irr,load, surface_area, Tesla_powerwall);
-        
     end
     %% ELECTRICITY COST CALCULATION
     if bat == 1
@@ -242,7 +246,7 @@ if definitive_NPV > best_NPV
     best_capex = definitive_capex;
     best_opex = definitive_opex;
     best_nb_panels = definitive_nb_panels;
-    %best_solar_panel = definitive_solar_panel;
+    best_solar_panel = definitive_solar_panel;
     best_inv = definitive_inv;
     if roof == 1
         if orientation == 1
@@ -252,16 +256,16 @@ if definitive_NPV > best_NPV
         end
     end
 end
-%end
+end
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
 nb_panels = best_nb_panels;
-%solar_panel = definitive_solar_panel;
+solar_panel = definitive_solar_panel;
 inv = best_inv;
 disp('The final roof area is');
 disp(roof_area);
 disp('The best solar panel is');
-%solar_panel = best_solar_panel;
-%disp(solar_panel);
+solar_panel = best_solar_panel;
+disp(solar_panel);
 disp('The used converter is');
 disp(inv);
 
@@ -271,7 +275,7 @@ disp(inv);
 
 
 if roof == 1 && orientation == 1 
-    disp('The most optimal angle is 40 degrees. Angle_Optimization.m');
+    
     angle = best_angle_south;
     surface_area = nb_panels*solar_panel.area;
     irr = south_face(angle,ray);
@@ -279,22 +283,19 @@ if roof == 1 && orientation == 1
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
 
 elseif roof == 1 && orientation == 2 
-    disp('The most optimal angle is 35 degrees. Angle_Optimization.m')
     angle = best_angle_ew;
- 
-
+    surface_area = nb_panels*solar_panel.area;
     irr = east_west(angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
-    surface_area = nb_panels*solar_panel.area;
-
-
+  
 elseif roof == 2 && orientation == 1 
+    
+    surface_area = nb_panels*solar_panel.area;
     irr = south_face(roof_angle,ray);
     [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
     [eff,Tz] = Efficiency(solar_panel,irr_monthly); %adapt efficiencies to monthly temperatures
 
-    surface_area = nb_panels*solar_panel.area;
 
 
 elseif roof == 2 && orientation == 2 
@@ -310,11 +311,11 @@ end
 %%
 %%%% efficiency calculation solar panel (needed for power flow) %%%%%
 %momenteel al hierboven berekend
-battery = Tesla_powerwall;
+
 %% Reference Cost
 [ref_gen_pf,ref_pf,ref_injectie,ref_consumptie]=Power_Flow(eff,irr,load,0,inv);
 [ref_cons_dag, ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht] = dag_nacht(ref_pf);
-[ref_total_cost,ref_capex,ref_opex] = Tariffs(tariff,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
+[ref_total_cost,ref_capex,ref_opex] = Tariffs(2,solar_panel,inv,ref_cons_dag,ref_cons_nacht, ref_net_cons_dag, ref_net_cons_nacht, nb_panels,battery,bat);
 
 %% POWER FLOW CALCULATION
 if bat == 2
