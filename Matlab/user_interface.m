@@ -127,15 +127,15 @@ invertor_list = [Fronius_Symo, Solar_Edge_3, Solar_Edge_4];
 %for angle = 25:35
 for invertor_index = 1:3
    inv = invertor_list(invertor_index);
-<<<<<<< Updated upstream
+
 
 %   solar_panel = solar_modules(solar_index);
     solar_panel = Canadian_solar;
-=======
+
  for solar_index = 1:5
   solar_panel = solar_modules(solar_index);
    % solar_panel = Canadian_solar;
->>>>>>> Stashed changes
+
     nb_panels = 1;
 %     if orientation == 1
     max_panels = floor(2*inv.input_DC_voltage/solar_panel.nominal_voltage);
