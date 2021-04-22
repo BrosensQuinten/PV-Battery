@@ -65,14 +65,14 @@ end
     
 %% battery flow
 %% create plots power flow
-    plot_len4 = 305000;%%size(date_time,1);
-    plotstart = 300001;
+    plot_len4 = 30000;%%size(date_time,1);
+    plotstart = 1;
     figure
     subplot(2,2,1)
     plot(date_time(plotstart:plot_len4),gen_pf(plotstart:plot_len4));
     ylabel('PV power [kW]')
     subplot(2,2,2)
-    plot(date_time(plotstart:plot_len4),pf_bat(plotstart:plot_len4));
+    plot(date_time(plotstart:plot_len4),pf(plotstart:plot_len4));
     ylabel('power flow [kW]  ')
     subplot(2,2,3)
     plot(date_time(plotstart:plot_len4),loadMinute(plotstart:plot_len4));

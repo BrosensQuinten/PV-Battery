@@ -63,10 +63,11 @@ for i=1:12
             j = 1;
         end    
     end
-   
+    
     
 end
 battery_charge(1) = [];
+pf = pf_kwh*60;
 end
 
 
