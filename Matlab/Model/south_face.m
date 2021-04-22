@@ -15,7 +15,7 @@ function irr= south_face(hoek,ray)
         incx = -inc*cos(alpha)*cos(beta);
         incz = inc*sin(alpha);
         inc_pan = (incx*sin(theta) + incz*cos(theta));
-        if inc_pan < 0
+        if inc_pan < 0 %aanpassen, per component x,z, ook in east west!
             inc_pan = 0;
         end
         irr(n,1) = inc_pan+diffusion(n,1);
