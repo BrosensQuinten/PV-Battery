@@ -132,9 +132,9 @@ for invertor_index = 1:3
 %   solar_panel = solar_modules(solar_index);
 %    solar_panel = Canadian_solar;
 
- for solar_index = 2:5
-  solar_panel = solar_modules(solar_index);
-   % solar_panel = Canadian_solar;
+% for solar_index = 2:5
+ % solar_panel = solar_modules(solar_index);
+   solar_panel = Canadian_solar;
 
     nb_panels = 1;
 %     if orientation == 1
@@ -152,7 +152,11 @@ while nb_panels < max_panels+1
     if roof == 1 && orientation == 1 
         
         angle = 53;
-     
+        if tariff == 2 && bat == 1
+            angle = 51;
+        elseif tariff == 2 && bat == 2
+            angle = 31;
+        end
         surface_area = nb_panels*solar_panel.area;
         irr = south_face(angle,ray);
         [irr_monthly] = monthly_irr(irr); %convert to mean monthly irradiances
@@ -162,6 +166,9 @@ while nb_panels < max_panels+1
     elseif roof == 1 && orientation == 2 
        
         angle = 30;
+        if tariff == 2 && bat ==1
+            angle = 29;
+        end
         
         surface_area = nb_panels*solar_panel.area;
         irr = east_west(angle,ray);
@@ -256,7 +263,7 @@ if definitive_NPV > best_NPV
         end
     end
 end
-end
+%end
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
 nb_panels = best_nb_panels;
 solar_panel = definitive_solar_panel;
