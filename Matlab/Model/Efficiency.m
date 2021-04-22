@@ -20,7 +20,7 @@ temp_coef = zonnepaneel.power_temperature_coef/100; %moest ook omgevormd worden 
 for i = 1:12
 %     Tz(i) = 25+273.15;
     T_prev = 100;
-    while abs(Tz(i)-T_prev) > 5
+    while abs(Tz(i)-T_prev) > 0.8
         dT = Tz(i)-Ta(i);
         b = 1/Ta(i);
         Gr = g*b*dT*L^3/v^2;

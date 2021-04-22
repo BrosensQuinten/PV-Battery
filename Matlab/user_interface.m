@@ -132,7 +132,7 @@ for invertor_index = 1:3
 %   solar_panel = solar_modules(solar_index);
     solar_panel = Canadian_solar;
 
- for solar_index = 1:5
+ for solar_index = 2:5
   solar_panel = solar_modules(solar_index);
    % solar_panel = Canadian_solar;
 
