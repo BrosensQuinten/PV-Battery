@@ -127,9 +127,15 @@ invertor_list = [Fronius_Symo, Solar_Edge_3, Solar_Edge_4];
 %for angle = 25:35
 for invertor_index = 1:3
    inv = invertor_list(invertor_index);
+<<<<<<< Updated upstream
 
 %   solar_panel = solar_modules(solar_index);
     solar_panel = Canadian_solar;
+=======
+ for solar_index = 1:5
+  solar_panel = solar_modules(solar_index);
+   % solar_panel = Canadian_solar;
+>>>>>>> Stashed changes
     nb_panels = 1;
 %     if orientation == 1
     max_panels = floor(2*inv.input_DC_voltage/solar_panel.nominal_voltage);
@@ -240,7 +246,7 @@ if definitive_NPV > best_NPV
     best_capex = definitive_capex;
     best_opex = definitive_opex;
     best_nb_panels = definitive_nb_panels;
-    %best_solar_panel = definitive_solar_panel;
+    best_solar_panel = definitive_solar_panel;
     best_inv = definitive_inv;
     if roof == 1
         if orientation == 1
@@ -250,16 +256,16 @@ if definitive_NPV > best_NPV
         end
     end
 end
-%end
+end
 %% RUNS Once: TO SHOW DIFFERENT RESULTS AFTER OPTIMIZATION
 nb_panels = best_nb_panels;
-%solar_panel = definitive_solar_panel;
+solar_panel = definitive_solar_panel;
 inv = best_inv;
 disp('The final roof area is');
 disp(roof_area);
 disp('The best solar panel is');
-%solar_panel = best_solar_panel;
-%disp(solar_panel);
+solar_panel = best_solar_panel;
+disp(solar_panel);
 disp('The used converter is');
 disp(inv);
 
